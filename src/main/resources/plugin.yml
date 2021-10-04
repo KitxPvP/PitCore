@@ -1,0 +1,5 @@
+name: PitCore
+description: KitX pit core
+version: 1.0
+main: com.kitx.PitCorePlugin
+author: Parametric, IWolfZ

@@ -1,0 +1,5 @@
+# Basic messages
+killMessage: "You killed %player%"
+deathMessage: "You died to %player%"
+
+killStreak: "&a%player% is on a %streak%"
