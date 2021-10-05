@@ -7,9 +7,11 @@ import org.bukkit.inventory.ItemStack;
 public class ShopItem {
     private final ItemStack itemStack;
     private final String name;
+    private final int id;
 
-    public ShopItem(ItemStack itemStack, String name) {
+    public ShopItem(ItemStack itemStack, String name, int id) {
         this.itemStack = itemStack;
         this.name = name;
+        this.id = id;
     }
 }
