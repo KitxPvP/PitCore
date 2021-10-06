@@ -1,8 +1,10 @@
 package com.kitx;
 
+import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.listener.DataListener;
+import com.kitx.scoreboard.ScoreboardManager;
 import lombok.Getter;
 
 import java.util.concurrent.Executors;
@@ -14,6 +16,8 @@ public enum PitCore {
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
+    private ScoreboardManager scoreboardManager;
+
     private PitCorePlugin plugin;
 
     public void onLoad(PitCorePlugin plugin) {
@@ -21,7 +25,9 @@ public enum PitCore {
     }
 
     public void onEnable() {
+        scoreboardManager = new ScoreboardManager();
         DataManager.INSTANCE.init(plugin);
+        Config.loadConfig();
     }
 
     public void onDisable() {

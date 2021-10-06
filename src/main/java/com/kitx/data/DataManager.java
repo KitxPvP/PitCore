@@ -31,6 +31,7 @@ public enum DataManager {
     public void deject(Player player) {
         PitCore.INSTANCE.getExecutorService().execute(() -> {
             get(player).saveData();
+            PitCore.INSTANCE.getScoreboardManager().remove(player);
             playerDataMap.remove(player.getUniqueId());
         });
     }

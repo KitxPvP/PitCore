@@ -17,7 +17,7 @@ public class PlayerData {
     private final Player player;
     private final UUID uuid;
 
-    private int level, kills, deaths, gold, xp, neededXp, bounty;
+    private int level, kills, deaths, gold, xp, neededXp, bounty, killStreak;
 
     public PlayerData(Player player) {
         this.player = player;
@@ -48,6 +48,7 @@ public class PlayerData {
             load.set("xp", getXp());
             load.set("neededXp", getNeededXp());
             load.set("bounty", getBounty());
+            load.set("killStreak", getKillStreak());
 
             try {
                 load.save(player);
@@ -78,6 +79,7 @@ public class PlayerData {
             setXp(load.getInt("xp"));
             setNeededXp(load.getInt("neededXp"));
             setBounty(load.getInt("bounty"));
+            setKillStreak(load.getInt("killStreak"));
         }
     }
 }
