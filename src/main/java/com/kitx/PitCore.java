@@ -2,8 +2,7 @@ package com.kitx;
 
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
-import com.kitx.data.PlayerData;
-import com.kitx.listener.DataListener;
+import com.kitx.permanent.PerkLoader;
 import com.kitx.scoreboard.ScoreboardManager;
 import jdk.nashorn.internal.ir.Block;
 import lombok.Getter;
@@ -31,6 +30,7 @@ public enum PitCore {
     public void onEnable() {
         scoreboardManager = new ScoreboardManager();
         DataManager.INSTANCE.init(plugin);
+        PerkLoader.INSTANCE.init();
         Config.loadConfig();
     }
 

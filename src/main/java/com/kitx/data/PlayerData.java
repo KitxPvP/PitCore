@@ -1,6 +1,9 @@
 package com.kitx.data;
 
 import com.kitx.PitCore;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkManager;
+import com.kitx.permanent.Perk;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,6 +11,8 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +23,9 @@ public class PlayerData {
     private final UUID uuid;
 
     private int level, kills, deaths, gold, xp, neededXp, bounty, killStreak;
+    private final List<Perk> purchasedPerks = new ArrayList<>();
+
+    private Perk slot1, slot2, slot3;
 
     public PlayerData(Player player) {
         this.player = player;
