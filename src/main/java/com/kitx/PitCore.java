@@ -5,8 +5,11 @@ import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.listener.DataListener;
 import com.kitx.scoreboard.ScoreboardManager;
+import jdk.nashorn.internal.ir.Block;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -17,6 +20,7 @@ public enum PitCore {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private ScoreboardManager scoreboardManager;
+    private final List<Block> pendingBlocks = new ArrayList<>();
 
     private PitCorePlugin plugin;
 

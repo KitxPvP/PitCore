@@ -12,14 +12,16 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerListener implements Listener {
 
@@ -79,16 +81,69 @@ public class PlayerListener implements Listener {
                         switch (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName().toLowerCase())) {
                             case "diamond sword": {
                                 ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
-                                itemStack.getItemMeta().spigot().setUnbreakable(true);
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.spigot().setUnbreakable(true);
+                                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                                List<String> lore = new ArrayList<>();
+                                lore.add(ColorUtil.translate("&cLost on death."));
+                                itemMeta.setLore(lore);
+                                itemStack.setItemMeta(itemMeta);
 
-                                itemStack.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                                player.getInventory().addItem(itemStack);
+                                player.updateInventory();
                                 break;
                             }
                             case "obsidian": {
+                                ItemStack itemStack = new ItemStack(Material.OBSIDIAN);
+                                itemStack.setAmount(8);
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.spigot().setUnbreakable(true);
+                                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                                List<String> lore = new ArrayList<>();
+                                lore.add(ColorUtil.translate("&cLost on death."));
+                                itemMeta.setLore(lore);
+                                itemStack.setItemMeta(itemMeta);
 
+                                player.getInventory().addItem(itemStack);
+                                player.updateInventory();
                                 break;
                             }
+                            case "diamond chestplate": {
+                                ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.spigot().setUnbreakable(true);
+                                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                                List<String> lore = new ArrayList<>();
+                                lore.add(ColorUtil.translate("&cLost on death."));
+                                itemMeta.setLore(lore);
+                                itemStack.setItemMeta(itemMeta);
 
+                                ItemStack clone = player.getInventory().getChestplate();
+                                if (clone != null)
+                                    player.getInventory().addItem(clone);
+
+                                player.getInventory().setChestplate(itemStack);
+                                player.updateInventory();
+                                break;
+                            }
+                            case "diamond boots": {
+                                ItemStack itemStack = new ItemStack(Material.DIAMOND_BOOTS);
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.spigot().setUnbreakable(true);
+                                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                                List<String> lore = new ArrayList<>();
+                                lore.add(ColorUtil.translate("&cLost on death."));
+                                itemMeta.setLore(lore);
+                                itemStack.setItemMeta(itemMeta);
+
+                                ItemStack clone = player.getInventory().getBoots();
+                                if (clone != null)
+                                    player.getInventory().addItem(clone);
+
+                                player.getInventory().setChestplate(itemStack);
+                                player.updateInventory();
+                                break;
+                            }
                         }
 
                         break;
@@ -98,6 +153,20 @@ public class PlayerListener implements Listener {
                     }
                 }
             }
+        }
+    }
+
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (!event.canBuild()) return;
+        if (event.isCancelled()) return;
+        ItemStack itemStack = event.getItemInHand();
+        if(itemStack == null) return;
+        if(itemStack.getType() == Material.OBSIDIAN) {
+            Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> {
+                event.getBlock().setType(Material.AIR);
+            }, 2400);
         }
     }
 }
