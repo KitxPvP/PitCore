@@ -1,7 +1,10 @@
 package com.kitx.permanent.impl;
 
 import com.kitx.PitCore;
+import com.kitx.data.DataManager;
+import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
+import com.kitx.permanent.PerkInfo;
 import com.kitx.utils.ColorUtil;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -15,12 +18,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@PerkInfo(name = "&6GoldenHeads", desc = "&7On kill you get a &6golden head!", cost = 800, icon = Material.GOLDEN_APPLE)
 public class GoldenHead extends Perk implements Listener {
 
     private final ItemStack goldenHead;
 
     public GoldenHead() {
-        super("GoldenHead", 800, new ItemStack(Material.GOLDEN_APPLE));
         PitCore.INSTANCE.getPlugin().getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
         this.goldenHead = skullItem();
     }
@@ -30,6 +33,8 @@ public class GoldenHead extends Perk implements Listener {
         Player killer = event.getEntity().getKiller();
 
         if (killer != null) {
+            PlayerData data = DataManager.INSTANCE.get(killer);
+            if(!data.getPerks().contains(this)) return;
 
             ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
             SkullMeta meta = (SkullMeta) skull.getItemMeta();

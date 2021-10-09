@@ -1,9 +1,8 @@
 package com.kitx.data;
 
 import com.kitx.PitCore;
-import com.kitx.perks.Perk;
-import com.kitx.perks.PerkManager;
 import com.kitx.permanent.Perk;
+import com.kitx.utils.ConcurrentEvictingList;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,9 +23,7 @@ public class PlayerData {
 
     private int level, kills, deaths, gold, xp, neededXp, bounty, killStreak;
     private final List<Perk> purchasedPerks = new ArrayList<>();
-
-    private Perk slot1, slot2, slot3;
-
+    private final ConcurrentEvictingList<Perk> perks = new ConcurrentEvictingList<>(3);
     public PlayerData(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
@@ -35,12 +32,12 @@ public class PlayerData {
     public void saveData() {
         final File dir = new File(PitCore.INSTANCE.getPlugin().getDataFolder(), "data");
 
-        if(!dir.exists()) //noinspection ResultOfMethodCallIgnored
+        if (!dir.exists()) //noinspection ResultOfMethodCallIgnored
             dir.mkdirs();
 
         final File player = new File(dir, getPlayer().getUniqueId() + ".yml");
 
-        if(!player.exists()) {
+        if (!player.exists()) {
             try {
                 //noinspection ResultOfMethodCallIgnored
                 player.createNewFile();
@@ -71,7 +68,7 @@ public class PlayerData {
 
         final File player = new File(dir, getPlayer().getUniqueId() + ".yml");
 
-        if(!player.exists()) {
+        if (!player.exists()) {
             try {
                 //noinspection ResultOfMethodCallIgnored
                 player.createNewFile();
