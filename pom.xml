@@ -42,5 +42,10 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit.worldedit-libs</groupId>
+            <artifactId>core</artifactId>
+            <version>7.2.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

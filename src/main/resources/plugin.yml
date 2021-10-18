@@ -3,3 +3,9 @@ description: KitX pit core
 version: 1.0
 main: com.kitx.PitCorePlugin
 author: Parametric, IWolfZ
+
+commands:
+  perks:
+    description: Pull up the perk gui
+  shop:
+    description: Pull up the shop gui

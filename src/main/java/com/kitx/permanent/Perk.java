@@ -1,8 +1,10 @@
 package com.kitx.permanent;
 
+import com.kitx.data.PlayerData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
@@ -19,6 +21,9 @@ public class Perk {
         this.icon = getCheckInfo().icon();
     }
 
+    public void onClick(PlayerData player) {}
+
+    public void onLayout(PlayerData player) {}
 
     public PerkInfo getCheckInfo() {
         if (this.getClass().isAnnotationPresent(PerkInfo.class)) {

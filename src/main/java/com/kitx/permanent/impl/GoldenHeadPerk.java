@@ -8,6 +8,7 @@ import com.kitx.permanent.PerkInfo;
 import com.kitx.utils.ColorUtil;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,11 +20,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 @PerkInfo(name = "&6GoldenHeads", desc = "&7On kill you get a &6golden head!", cost = 800, icon = Material.GOLDEN_APPLE)
-public class GoldenHead extends Perk implements Listener {
+public class GoldenHeadPerk extends Perk implements Listener {
 
     private final ItemStack goldenHead;
 
-    public GoldenHead() {
+    public GoldenHeadPerk() {
         PitCore.INSTANCE.getPlugin().getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
         this.goldenHead = skullItem();
     }
@@ -34,28 +35,32 @@ public class GoldenHead extends Perk implements Listener {
 
         if (killer != null) {
             PlayerData data = DataManager.INSTANCE.get(killer);
-            if(!data.getPerks().contains(this)) return;
+            if (data.getPerks().contains(this)) {
+                killer.getInventory().addItem(goldenHead);
+            } else {
+                killer.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+            }
 
-            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
-            SkullMeta meta = (SkullMeta) skull.getItemMeta();
-            meta.setOwner("PhantomTupac");
-            meta.setDisplayName(ColorUtil.translate("&6Golden Head &7(Right Click)"));
-            skull.setItemMeta(meta);
-
-            killer.getInventory().addItem(skull);
         }
 
     }
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
+        if (event.getItem() == null) return;
+        if (event.getItem().getItemMeta() == null) return;
+
         if (event.getItem().getItemMeta().equals(goldenHead.getItemMeta())) {
             Player player = event.getPlayer();
 
-            player.getInventory().remove(goldenHead);
+            player.playSound(player.getLocation(), Sound.EAT, 1, 1);
+
+            ItemStack itemStack = new ItemStack(event.getItem());
+            itemStack.setAmount(1);
+            player.getInventory().removeItem(new ItemStack(itemStack));
             player.updateInventory();
             PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 60, 1);
-            PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 20, 1);
+            PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 1, 1);
             PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 60, 1);
 
             player.addPotionEffect(regen);

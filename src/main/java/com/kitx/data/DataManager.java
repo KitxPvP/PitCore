@@ -3,6 +3,7 @@ package com.kitx.data;
 import com.kitx.PitCore;
 import com.kitx.PitCorePlugin;
 import com.kitx.listener.DataListener;
+import com.kitx.listener.PlayerListener;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -18,12 +19,14 @@ public enum DataManager {
      */
     public void init(PitCorePlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new DataListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
     }
 
     public void inject(Player player) {
         PitCore.INSTANCE.getExecutorService().execute(() -> {
             PlayerData data = new PlayerData(player);
             playerDataMap.put(player.getUniqueId(), data);
+            PitCore.INSTANCE.getScoreboardManager().create(player);
             data.loadData();
         });
     }

@@ -1,8 +1,9 @@
-package com.kitx.scoreboard;
+package com.kitx.manager;
 
 import com.kitx.PitCore;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
+import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.ColorUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,16 +34,16 @@ public class ScoreboardManager {
 
             entry.getKey().getPlayer().setPlayerListName(entry.getKey().getPlayer().getDisplayName());
 
-            board.updateTitle(ColorUtil.translate("&6&lKitX &7┃ &fKits"));
-            board.updateLine(0, ColorUtil.translate("&7&m------------------"));
-            board.updateLine(1, ColorUtil.translate("&cLevel: &f" + pData.getLevel()));
-            board.updateLine(2, ColorUtil.translate("&cKills: &f" + pData.getKills()));
-            board.updateLine(3, ColorUtil.translate("&cDeaths: &f" + pData.getDeaths()));
-            board.updateLine(4, ColorUtil.translate("&cKillstreak: &f" + pData.getKillStreak()));
-            board.updateLine(5, ColorUtil.translate("&cProgress: &f" + pData.getXp() + "/" + pData.getNeededXp()));
-            board.updateLine(6, "");
-            board.updateLine(7, "strafekits.cf");
-            board.updateLine(8, ColorUtil.translate("&7&m------------------"));
+            board.updateTitle(ColorUtil.translate("&e&lKITX"));
+            board.updateLine(0, ColorUtil.translate(""));
+            board.updateLine(1, ColorUtil.translate("&fLevel&7: " + pData.getHeader()));
+            board.updateLine(2, ColorUtil.translate("&fNeeded XP&7: &b" + pData.getNeededXp()));
+            board.updateLine(3, "");
+            board.updateLine(4, ColorUtil.translate("&fGold&7: &6" + pData.getGold()));
+            board.updateLine(5, "");
+            board.updateLine(6, ColorUtil.translate("&fStatus&7: &aIdle"));
+            board.updateLine(7, "");
+            board.updateLine(8, ColorUtil.translate("&ekitx.minehut.gg"));
         }
     }
 
