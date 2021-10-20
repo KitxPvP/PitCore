@@ -4,6 +4,8 @@ import com.kitx.PitCore;
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
+import com.kitx.gui.impl.PermGui;
+import com.kitx.gui.impl.TempGui;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.utils.ColorUtil;
@@ -106,17 +108,21 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /*
+    Jump pad logic
+     */
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
 
         Player p = event.getPlayer();
+        PlayerData data = DataManager.INSTANCE.get(p);
         Location l = p.getLocation();
         Vector vector = p.getEyeLocation().getDirection().multiply(2);
         vector.setY(0.5);
         Location d = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
-        if(d.getBlock().getType() == Material.SLIME_BLOCK) {
+        if(d.getBlock().getType() == Material.SLIME_BLOCK && System.currentTimeMillis() - data.getLastJumpPad() > 1000) {
             p.setVelocity(vector);
-
+            data.setLastJumpPad(System.currentTimeMillis());
             p.playSound(p.getLocation(), Sound.FIREWORK_LAUNCH, 1, 1);
         }
     }
@@ -146,7 +152,7 @@ public class PlayerListener implements Listener {
                         switch (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName().toLowerCase())) {
                             case "diamond sword": {
                                 if(data.getGold() > 150) {
-                                    data.setGold(data.getGold() - 150);
+                                    data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(150)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
                                     ItemMeta itemMeta = itemStack.getItemMeta();
                                     itemMeta.spigot().setUnbreakable(true);
@@ -165,7 +171,7 @@ public class PlayerListener implements Listener {
                             }
                             case "obsidian": {
                                 if(data.getGold() > 50) {
-                                    data.setGold(data.getGold() - 50);
+                                    data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(50)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.OBSIDIAN);
                                     itemStack.setAmount(8);
                                     ItemMeta itemMeta = itemStack.getItemMeta();
@@ -185,7 +191,7 @@ public class PlayerListener implements Listener {
                             }
                             case "diamond chestplate": {
                                 if(data.getGold() > 500) {
-                                    data.setGold(data.getGold() - 500);
+                                    data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(500)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
                                     ItemMeta itemMeta = itemStack.getItemMeta();
                                     itemMeta.spigot().setUnbreakable(true);
@@ -194,8 +200,11 @@ public class PlayerListener implements Listener {
                                     lore.add(ColorUtil.translate("&cLost on death."));
                                     itemMeta.setLore(lore);
                                     itemStack.setItemMeta(itemMeta);
-
-                                    player.getInventory().addItem(itemStack);
+                                    ItemStack clone = player.getInventory().getChestplate();
+                                    if (clone != null)
+                                        player.getInventory().addItem(clone);
+                                    player.getInventory().setChestplate(itemStack);
+                                    player.playSound(player.getLocation(), Sound.HORSE_SADDLE, 1, 1);
                                     player.updateInventory();
                                 } else {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
@@ -204,7 +213,7 @@ public class PlayerListener implements Listener {
                             }
                             case "diamond boots": {
                                 if(data.getGold() > 300) {
-                                    data.setGold(data.getGold() - 300);
+                                    data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(300)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_BOOTS);
                                     ItemMeta itemMeta = itemStack.getItemMeta();
                                     itemMeta.spigot().setUnbreakable(true);
@@ -218,7 +227,8 @@ public class PlayerListener implements Listener {
                                     if (clone != null)
                                         player.getInventory().addItem(clone);
 
-                                    player.getInventory().setChestplate(itemStack);
+                                    player.getInventory().setBoots(itemStack);
+                                    player.playSound(player.getLocation(), Sound.HORSE_SADDLE, 1, 1);
                                     player.updateInventory();
                                 } else {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
@@ -241,21 +251,26 @@ public class PlayerListener implements Listener {
                                 if(!data.getPurchasedPerks().contains(perk)) {
                                     if(data.getGold() > perk.getCost()) {
                                         player.sendMessage(ChatColor.GREEN + "You purchased " + clickedName);
-                                        data.setGold(data.getGold() - perk.getCost());
+                                        player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+                                        data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(perk.getCost())).doubleValue());
                                         data.getPurchasedPerks().add(perk);
-                                    }  {
+                                    } else {
+                                        player.playSound(player.getLocation(), Sound.FIZZ, 1, 1);
                                         player.sendMessage(ChatColor.RED + "You do not have enough gold for that!");
                                     }
                                 } else {
                                     if(data.getPerks().contains(perk)) {
+                                        player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
                                         player.sendMessage(ChatColor.RED + "You unselected " + clickedName);
                                         data.getPerks().remove(perk);
                                     } else {
+                                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
                                         player.sendMessage(ChatColor.GREEN + "You selected " + clickedName);
                                         data.getPerks().add(perk);
                                         perk.onClick(data);
                                     }
                                 }
+                                new PermGui(data).openGui();
                             }
                         }
                         break;

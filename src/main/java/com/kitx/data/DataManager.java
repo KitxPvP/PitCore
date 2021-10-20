@@ -2,8 +2,10 @@ package com.kitx.data;
 
 import com.kitx.PitCore;
 import com.kitx.PitCorePlugin;
+import com.kitx.listener.ChatFormatListener;
 import com.kitx.listener.DataListener;
 import com.kitx.listener.PlayerListener;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -20,6 +22,10 @@ public enum DataManager {
     public void init(PitCorePlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new DataListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ChatFormatListener(), plugin);
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            inject(player);
+        }
     }
 
     public void inject(Player player) {

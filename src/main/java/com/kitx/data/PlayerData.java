@@ -26,6 +26,7 @@ public class PlayerData {
 
     private final Player player;
     private final UUID uuid;
+    private long lastJumpPad;
 
     private int level, kills, deaths, xp, neededXp, bounty, killStreak, prestige;
     private double gold;
@@ -96,6 +97,10 @@ public class PlayerData {
             color = "f";
         }
         return ColorUtil.translate("&" + color);
+    }
+
+    public void updateStatus() {
+
     }
 
     public void saveData() {
@@ -182,6 +187,7 @@ public class PlayerData {
                 //noinspection ResultOfMethodCallIgnored
                 player.createNewFile();
                 loadLayout();
+                level = 1;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -202,6 +208,21 @@ public class PlayerData {
             for (String key : load.getConfigurationSection("purchasedPerks").getKeys(false)) {
                 purchasedPerks.add(PerkLoader.INSTANCE.findItem(load.getString("purchasedPerks." + key)));
             }
+        }
+    }
+
+    public enum Status {
+        IDLE("&aIdle"), FIGHTING("&cFighting"), BOUNTIED("&cBountied");
+
+        private final String name;
+
+        Status(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 }

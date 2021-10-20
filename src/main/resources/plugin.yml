@@ -9,3 +9,5 @@ commands:
     description: Pull up the perk gui
   shop:
     description: Pull up the shop gui
+  stats:
+    description: Shows the stats of the player

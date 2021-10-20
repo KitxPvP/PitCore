@@ -49,8 +49,8 @@ public class GoldenHeadPerk extends Perk implements Listener {
     public void onRightClick(PlayerInteractEvent event) {
         if (event.getItem() == null) return;
         if (event.getItem().getItemMeta() == null) return;
-
-        if (event.getItem().getItemMeta().equals(goldenHead.getItemMeta())) {
+        if(event.getItem().getItemMeta().getDisplayName() == null) return;
+        if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
             Player player = event.getPlayer();
 
             player.playSound(player.getLocation(), Sound.EAT, 1, 1);
@@ -59,14 +59,15 @@ public class GoldenHeadPerk extends Perk implements Listener {
             itemStack.setAmount(1);
             player.getInventory().removeItem(new ItemStack(itemStack));
             player.updateInventory();
-            PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 60, 1);
-            PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 1, 1);
-            PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 60, 1);
+            PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
+            PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 1, 0);
+            PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 120, 0);
+            PotionEffect absortion = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
 
             player.addPotionEffect(regen);
             player.addPotionEffect(instant);
             player.addPotionEffect(speed);
-
+            player.addPotionEffect(absortion);
             event.setCancelled(true);
         }
     }

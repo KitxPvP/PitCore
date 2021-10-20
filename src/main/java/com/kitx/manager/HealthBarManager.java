@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+//This is taken from a plugin :/
 public class HealthBarManager implements Listener {
 
     private final String message;

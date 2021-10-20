@@ -2,6 +2,7 @@ package com.kitx;
 
 import com.kitx.command.PerkCommand;
 import com.kitx.command.ShopCommand;
+import com.kitx.command.StatsCommand;
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.manager.HealthBarManager;
@@ -49,6 +50,7 @@ public enum PitCore {
     }
 
     public void handleBukkit() {
+        plugin.getCommand("stats").setExecutor(new StatsCommand());
         plugin.getCommand("perks").setExecutor(new PerkCommand());
         plugin.getCommand("shop").setExecutor(new ShopCommand());
     }

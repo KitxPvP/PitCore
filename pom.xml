@@ -30,6 +30,14 @@
     </repositories>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/net.luckperms/api -->
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.3</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
