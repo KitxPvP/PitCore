@@ -33,7 +33,6 @@ public class ScoreboardManager {
             FastBoard board = entry.getValue();
 
             entry.getKey().getPlayer().setPlayerListName(entry.getKey().getPlayer().getDisplayName());
-
             board.updateTitle(ColorUtil.translate("&e&lKITX"));
             board.updateLine(0, ColorUtil.translate(""));
             board.updateLine(1, ColorUtil.translate("&fLevel&7: " + pData.getHeader()));
@@ -41,9 +40,16 @@ public class ScoreboardManager {
             board.updateLine(3, "");
             board.updateLine(4, ColorUtil.translate("&fGold&7: &6" + pData.getGold()));
             board.updateLine(5, "");
-            board.updateLine(6, ColorUtil.translate("&fStatus&7: &aIdle"));
-            board.updateLine(7, "");
-            board.updateLine(8, ColorUtil.translate("&ekitx.minehut.gg"));
+            board.updateLine(6, ColorUtil.translate("&fStatus&7: " + pData.getStatus().getName()));
+            if(pData.getStatus() == PlayerData.Status.BOUNTIED) {
+                board.updateLine(7, "&fBounty&7: &6" + pData.getBounty());
+                board.updateLine(8, "");
+                board.updateLine(9, ColorUtil.translate("&ekitx.minehut.gg"));
+            } else {
+                board.updateLine(7, "");
+                board.updateLine(8, ColorUtil.translate("&ekitx.minehut.gg"));
+            }
+
         }
     }
 
@@ -64,7 +70,7 @@ public class ScoreboardManager {
 
     }
 
-    public FastBoard get(Player player) {
-        return this.boards.get(data.get(player));
+    public FastBoard get(PlayerData data) {
+        return this.boards.get(data);
     }
 }

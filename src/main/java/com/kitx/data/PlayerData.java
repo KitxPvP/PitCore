@@ -26,10 +26,11 @@ public class PlayerData {
 
     private final Player player;
     private final UUID uuid;
+    private Status status = Status.IDLE;
     private long lastJumpPad;
 
-    private int level, kills, deaths, xp, neededXp, bounty, killStreak, prestige;
-    private double gold;
+    private int level, kills, deaths, xp, neededXp, killStreak, prestige;
+    private double gold, bounty;
 
     private final List<Location> pendingBlocks = new ArrayList<>();
     private final List<Perk> purchasedPerks = new ArrayList<>();
@@ -38,6 +39,10 @@ public class PlayerData {
     public PlayerData(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
+    }
+
+    public void bountyPlayer(double bounty) {
+
     }
 
     public String getHeader() {
@@ -220,8 +225,7 @@ public class PlayerData {
             this.name = name;
         }
 
-        @Override
-        public String toString() {
+        public String getName() {
             return name;
         }
     }

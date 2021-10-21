@@ -5,7 +5,6 @@ import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.gui.impl.PermGui;
-import com.kitx.gui.impl.TempGui;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.utils.ColorUtil;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -25,7 +23,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.StringUtil;
 import org.bukkit.util.Vector;
 
 import java.math.BigDecimal;
@@ -86,6 +83,9 @@ public class PlayerListener implements Listener {
                         .replaceAll("%streak%", String.format("%s", killerUser.getKillStreak())));
             }
 
+            if(killedUser.getStatus() == PlayerData.Status.BOUNTIED) {
+                PitCore.INSTANCE.getScoreboardManager().get(killedUser).removeLine(9);
+            }
 
         }
 
