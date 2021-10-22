@@ -117,8 +117,8 @@ public class PlayerListener implements Listener {
         Player p = event.getPlayer();
         PlayerData data = DataManager.INSTANCE.get(p);
         Location l = p.getLocation();
-        Vector vector = p.getEyeLocation().getDirection().multiply(2);
-        vector.setY(0.5);
+        Vector vector = p.getEyeLocation().getDirection().multiply(3);
+        vector.setY(0.7);
         Location d = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
         if(d.getBlock().getType() == Material.SLIME_BLOCK && System.currentTimeMillis() - data.getLastJumpPad() > 1000) {
             p.setVelocity(vector);
