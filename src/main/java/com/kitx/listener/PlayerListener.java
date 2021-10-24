@@ -4,7 +4,8 @@ import com.kitx.PitCore;
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
-import com.kitx.gui.impl.PermGui;
+import com.kitx.gui.impl.SelectGui;
+import com.kitx.gui.impl.SlotGui;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.utils.ColorUtil;
@@ -15,8 +16,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -28,6 +31,7 @@ import org.bukkit.util.Vector;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PlayerListener implements Listener {
 
@@ -48,14 +52,17 @@ public class PlayerListener implements Listener {
 
             killedUser.setKillStreak(0);
 
-            double xpAdd = Math.ceil(Math.random() * 5) + 5;
+            double xpAdd = (int) Math.abs(Math.ceil(Math.random() * killerUser.getLevel() - Math.ceil(Math.random() * killerUser.getLevel()))) + 50;
             killerUser.setXp((int) (killerUser.getXp() + xpAdd));
 
             if(killerUser.getXp() >= killerUser.getNeededXp()) {
                 killerUser.setXp(0);
+                String lastHeader = killerUser.getHeader();
                 killerUser.setLevel(killerUser.getLevel() + 1);
+                String header = killerUser.getHeader();
                 killerUser.setNeededXp(killerUser.getLevel() * 25);
-                killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 1, 1);
+                killer.sendTitle(ColorUtil.translate("&b&lLEVEL UP!"), ColorUtil.translate(lastHeader + " &7→ " + header));
+                killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 3, 1);
             } else {
                 killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
             }
@@ -128,10 +135,22 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
+        String[] args = event.getMessage().split(" ");
+        if(!data.getCountDown().isFinished() && !args[0].toLowerCase().contains("/report") && !args[0].toLowerCase().contains("/sc")) {
+            event.getPlayer().sendMessage(ChatColor.RED + "You are in combat!");
+            event.setCancelled(true);
+        }
+
+    }
+
+    @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         PlayerData data = DataManager.INSTANCE.get(player);
         data.loadLayout();
+        data.getCountDown().setSeconds(0);
     }
 
     @EventHandler
@@ -239,15 +258,40 @@ public class PlayerListener implements Listener {
 
                         break;
                     }
-                    case "perks": {
+                    case "mystic well": {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
                         if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
+                        try {
+                            if(e.getCurrentItem().getItemMeta().getLore().contains("\2477Used in the mystic well")) {
+                                switch (e.getCurrentItem().getType()) {
+                                    case GOLD_SWORD: {
+
+                                        break;
+                                    }
+                                    case BOW: {
+
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (Exception ignored) {}
+                        break;
+                    }
+                    case "perks 3":
+                    case "perks 2":
+                    case "perks 1": {
+                        e.setCancelled(true);
+                        if (e.getCurrentItem() == null) return;
+                        if (e.getCurrentItem().getItemMeta() == null) return;
+                        if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
+                        int slot = Integer.parseInt(inventory.getName().split(" ")[1]) - 1;
                         for (Perk perk : PerkLoader.INSTANCE.getPerkList()) {
                             String name = perk.getName().replaceAll("&", "");
                             String clickedName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
                             if (name.contains(clickedName)) {
+
                                 if(!data.getPurchasedPerks().contains(perk)) {
                                     if(data.getGold() > perk.getCost()) {
                                         player.sendMessage(ChatColor.GREEN + "You purchased " + clickedName);
@@ -261,17 +305,41 @@ public class PlayerListener implements Listener {
                                 } else {
                                     if(data.getPerks().contains(perk)) {
                                         player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
-                                        player.sendMessage(ChatColor.RED + "You unselected " + clickedName);
-                                        data.getPerks().remove(perk);
+                                        player.sendMessage(ChatColor.RED + "You already selected " + clickedName);
                                     } else {
                                         player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
                                         player.sendMessage(ChatColor.GREEN + "You selected " + clickedName);
-                                        data.getPerks().add(perk);
+                                        try {
+                                            if(data.getPerks().get(slot) != null) {
+                                                data.getPerks().set(slot, perk);
+                                                System.out.println("Passed");
+                                            }
+                                        } catch (Exception ignored) {
+                                            System.out.println("Error");
+                                            data.getPerks().add(perk);
+                                        }
                                         perk.onClick(data);
                                     }
                                 }
-                                new PermGui(data).openGui();
+                                new SelectGui(data, slot + 1).openGui();
+                                player.updateInventory();
                             }
+                        }
+                        if(e.getCurrentItem().getItemMeta().getDisplayName().contains("Back")) {
+                            new SlotGui(data).openGui();
+                        }
+                        break;
+                    }
+                    case "perk slots": {
+                        e.setCancelled(true);
+                        if (e.getCurrentItem() == null) return;
+                        if (e.getCurrentItem().getItemMeta() == null) return;
+                        if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
+                        int slot = Integer.parseInt(e.getCurrentItem().getItemMeta().getDisplayName().split("#")[1]) - 1;
+                        if((slot == 1 && data.getLevel() >= 35) || (slot == 2 && data.getLevel() >= 75) || slot == 0)  {
+                            new SelectGui(data, slot + 1).openGui();
+                        } else {
+                            player.sendMessage(ChatColor.RED + "You do not have the required level!");
                         }
                         break;
                     }
@@ -284,10 +352,27 @@ public class PlayerListener implements Listener {
         return (min + Math.random() * ((max - min)));
     }
 
+    @EventHandler
+    public void onArrowLand(ProjectileHitEvent event) {
+        event.getEntity().remove();
+    }
 
     @EventHandler
     public void onLavaFlow(BlockFromToEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if(event.isCancelled()) return;
+        if(event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
+            PlayerData damage = DataManager.INSTANCE.get((Player) event.getDamager());
+            PlayerData entity = DataManager.INSTANCE.get((Player) event.getEntity());
+            damage.getCountDown().resetTime();
+            damage.setStatus(PlayerData.Status.FIGHTING);
+            entity.getCountDown().resetTime();
+            entity.setStatus(PlayerData.Status.FIGHTING);
+        }
     }
 
     @EventHandler
@@ -310,8 +395,7 @@ public class PlayerListener implements Listener {
         ItemStack itemStack = event.getItemInHand();
         if (itemStack == null) return;
         if (itemStack.getType() == Material.OBSIDIAN) {
-            PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
-            data.getPendingBlocks().add(event.getBlock().getLocation());
+            PitCore.INSTANCE.getPendingBlocks().add(event.getBlock());
             Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> {
                 event.getBlock().setType(Material.AIR);
             }, 2400);

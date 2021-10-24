@@ -4,15 +4,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Getter
 @RequiredArgsConstructor
-public final class ConcurrentEvictingList<T> extends ConcurrentLinkedDeque<T> {
+public final class EvictingList<T> extends LinkedList<T> {
 
     private final int maxSize;
 
-    public ConcurrentEvictingList(final Collection<? extends T> c, final int maxSize) {
+    public EvictingList(final Collection<? extends T> c, final int maxSize) {
         super(c);
         this.maxSize = maxSize;
     }

@@ -3,16 +3,20 @@ package com.kitx.data;
 import com.kitx.PitCore;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
-import com.kitx.utils.ColorUtil;
-import com.kitx.utils.ConcurrentEvictingList;
-import com.kitx.utils.ItemUtils;
+import com.kitx.scoreboard.FastBoard;
+import com.kitx.utils.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,13 +36,25 @@ public class PlayerData {
     private int level, kills, deaths, xp, neededXp, killStreak, prestige;
     private double gold, bounty;
 
+    private final CountDown countDown = new CountDown(10);
+    private final Cooldown chatCD = new Cooldown();
+    private final Cooldown gapCD = new Cooldown();
+
     private final List<Location> pendingBlocks = new ArrayList<>();
     private final List<Perk> purchasedPerks = new ArrayList<>();
-    private final ConcurrentEvictingList<Perk> perks = new ConcurrentEvictingList<>(3);
+    private final EvictingList<Perk> perks = new EvictingList<>(3);
+    private final String prefix;
+    private double damageMultiplier;
+    private long lastKill;
 
     public PlayerData(Player player) {
         this.player = player;
+        countDown.setSeconds(0);
         this.uuid = player.getUniqueId();
+
+        LuckPerms api = LuckPermsProvider.get();
+        User user = api.getPlayerAdapter(Player.class).getUser(player);
+        this.prefix = user.getCachedData().getMetaData().getPrefix();
     }
 
     public void bountyPlayer(double bounty) {
@@ -74,9 +90,9 @@ public class PlayerData {
         } else if(level >= 100 && level <= 109) {
             color = "d";
         } else if(level >= 110 && level <= 119) {
-            color = "&f";
+            color = "f";
         } else if(level >= 120) {
-            color = "&b";
+            color = "b";
         }
 
         return ColorUtil.translate("&" + color);
@@ -105,14 +121,24 @@ public class PlayerData {
     }
 
     public void updateStatus() {
-
+        FastBoard board = PitCore.INSTANCE.getScoreboardManager().get(this);
+        board.removeLine(8);
+        board.removeLine(9);
+        status = Status.IDLE;
     }
 
     public void saveData() {
 
-        for (Location location : pendingBlocks) {
-            location.getBlock().setType(Material.AIR);
-        }
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                for (Location location : pendingBlocks) {
+                    location.getBlock().setType(Material.AIR);
+                }
+            }
+        }.runTask(PitCore.INSTANCE.getPlugin());
+
 
         final File dir = new File(PitCore.INSTANCE.getPlugin().getDataFolder(), "data");
 
@@ -138,8 +164,8 @@ public class PlayerData {
             load.set("neededXp", getNeededXp());
             load.set("bounty", getBounty());
             load.set("killStreak", getKillStreak());
-            for (Perk perk : getPerks()) {
-                load.set("selectedPerks." + perk.getName(), perk.getName());
+            for (int i = 0; i < perks.size(); i++) {
+                load.set("selectedPerks." + i, perks.get(i).getName());
             }
             for (Perk perk : getPurchasedPerks()) {
                 load.set("purchasedPerks." + perk.getName(), perk.getName());

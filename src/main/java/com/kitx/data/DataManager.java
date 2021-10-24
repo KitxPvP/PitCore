@@ -5,12 +5,15 @@ import com.kitx.PitCorePlugin;
 import com.kitx.listener.ChatFormatListener;
 import com.kitx.listener.DataListener;
 import com.kitx.listener.PlayerListener;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public enum DataManager {
     INSTANCE;
 
@@ -26,6 +29,7 @@ public enum DataManager {
         for(Player player : Bukkit.getOnlinePlayers()) {
             inject(player);
         }
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(PitCore.INSTANCE.getPlugin(), this::saveAll, 0, 6000);
     }
 
     public void inject(Player player) {
@@ -50,7 +54,6 @@ public enum DataManager {
             data.saveData();
         }
     }
-
     public PlayerData get(Player player) {
         return playerDataMap.get(player.getUniqueId());
     }

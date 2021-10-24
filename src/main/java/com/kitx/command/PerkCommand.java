@@ -1,7 +1,8 @@
 package com.kitx.command;
 
 import com.kitx.data.DataManager;
-import com.kitx.gui.impl.PermGui;
+import com.kitx.gui.impl.SelectGui;
+import com.kitx.gui.impl.SlotGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,7 +12,7 @@ public class PerkCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
         if (sender instanceof Player) {
-            new PermGui(DataManager.INSTANCE.get(((Player) sender).getPlayer())).openGui();
+            new SlotGui(DataManager.INSTANCE.get(((Player) sender).getPlayer())).openGui();
         }
         return false;
     }

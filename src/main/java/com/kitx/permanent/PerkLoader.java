@@ -1,8 +1,6 @@
 package com.kitx.permanent;
 
-import com.kitx.permanent.impl.FishingRodPerk;
-import com.kitx.permanent.impl.GoldenHeadPerk;
-import com.kitx.permanent.impl.LavaPerk;
+import com.kitx.permanent.impl.*;
 import com.kitx.utils.ClassUtils;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -20,6 +18,11 @@ public enum PerkLoader {
         perkList.add(new LavaPerk());
         perkList.add(new FishingRodPerk());
         perkList.add(new GoldenHeadPerk());
+        perkList.add(new StrengthChaining());
+        perkList.add(new SafetyFirst());
+        perkList.add(new Mineman());
+        perkList.add(new EndlessQuiver());
+        perkList.add(new Vampire());
     }
 
     public Perk findItem(String name) {

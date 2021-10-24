@@ -3,7 +3,6 @@ killMessage: "You killed %player%"
 deathMessage: "You died to %player%"
 assistMessage: "ASSIST! on %player%"
 
-
 killStreak: "&a%player% is on a %streak%"
 
 # Action Bar Shit

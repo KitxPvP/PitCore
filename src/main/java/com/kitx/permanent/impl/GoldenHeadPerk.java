@@ -6,6 +6,7 @@ import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkInfo;
 import com.kitx.utils.ColorUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
@@ -19,7 +20,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@PerkInfo(name = "&6GoldenHeads", desc = "&7On kill you get a &6golden head!", cost = 800, icon = Material.GOLDEN_APPLE)
+@PerkInfo(name = "&6GoldenHeads", desc = "&7On kill you get a &6golden head!", cost = 450, icon = Material.GOLDEN_APPLE)
 public class GoldenHeadPerk extends Perk implements Listener {
 
     private final ItemStack goldenHead;
@@ -52,22 +53,26 @@ public class GoldenHeadPerk extends Perk implements Listener {
         if(event.getItem().getItemMeta().getDisplayName() == null) return;
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
             Player player = event.getPlayer();
+            PlayerData data = DataManager.INSTANCE.get(player);
+            if(data.getGapCD().hasCooldown(3)) {
+                player.playSound(player.getLocation(), Sound.EAT, 1, 1);
 
-            player.playSound(player.getLocation(), Sound.EAT, 1, 1);
+                ItemStack itemStack = new ItemStack(event.getItem());
+                itemStack.setAmount(1);
+                player.getInventory().removeItem(new ItemStack(itemStack));
+                player.updateInventory();
+                PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
+                PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 1, 0);
+                PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 120, 0);
+                PotionEffect absortion = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
 
-            ItemStack itemStack = new ItemStack(event.getItem());
-            itemStack.setAmount(1);
-            player.getInventory().removeItem(new ItemStack(itemStack));
-            player.updateInventory();
-            PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
-            PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 1, 0);
-            PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 120, 0);
-            PotionEffect absortion = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
-
-            player.addPotionEffect(regen);
-            player.addPotionEffect(instant);
-            player.addPotionEffect(speed);
-            player.addPotionEffect(absortion);
+                player.addPotionEffect(regen);
+                player.addPotionEffect(instant);
+                player.addPotionEffect(speed);
+                player.addPotionEffect(absortion);
+            } else {
+                player.sendMessage(ChatColor.RED + "Heads are on cooldown for " + data.getGapCD().getSeconds());
+            }
             event.setCancelled(true);
         }
     }

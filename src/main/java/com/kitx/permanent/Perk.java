@@ -3,13 +3,15 @@ package com.kitx.permanent;
 import com.kitx.data.PlayerData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
 @RequiredArgsConstructor
-public class Perk {
+public class Perk implements Listener {
     private final String name, desc;
     private final int cost;
     private final Material icon;

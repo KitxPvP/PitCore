@@ -11,3 +11,9 @@ commands:
     description: Pull up the shop gui
   stats:
     description: Shows the stats of the player
+  spawn:
+    description: Teleports to spawn
+  setspawn:
+    description: Sets spawn
+  nick:
+    description: Nickname yourself

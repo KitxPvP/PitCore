@@ -55,5 +55,10 @@
             <artifactId>core</artifactId>
             <version>7.2.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.azbh111</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.4.0</version>
+        </dependency>
     </dependencies>
 </project>

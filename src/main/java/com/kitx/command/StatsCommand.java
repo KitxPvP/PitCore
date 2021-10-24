@@ -17,13 +17,13 @@ public class StatsCommand implements CommandExecutor {
             try {
                 PlayerData data = DataManager.INSTANCE.get(args.length > 0 ? Bukkit.getPlayer(args[0]) : player);
 
-                player.sendMessage(ChatColor.GREEN + "Stats of " + data.getPlayer().getName());
+                player.sendMessage(ChatColor.RED + "Stats of " + data.getPlayer().getName());
                 player.sendMessage("");
-                player.sendMessage(ChatColor.GREEN + "level: " + data.getLevel());
-                player.sendMessage(ChatColor.GREEN + "gold " + data.getGold());
-                player.sendMessage(ChatColor.GREEN + "kills: " + data.getKills());
-                player.sendMessage(ChatColor.GREEN + "kill streak: " + data.getKillStreak());
-                player.sendMessage(ChatColor.GREEN + "deaths: " + data.getDeaths());
+                player.sendMessage(ChatColor.RED + "level: " + data.getLevel());
+                player.sendMessage(ChatColor.RED + "gold " + data.getGold());
+                player.sendMessage(ChatColor.RED + "kills: " + data.getKills());
+                player.sendMessage(ChatColor.RED + "kill streak: " + data.getKillStreak());
+                player.sendMessage(ChatColor.RED + "deaths: " + data.getDeaths());
 
             } catch (Exception e) {
                 player.sendMessage(ChatColor.RED + "Invalid player!");

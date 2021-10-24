@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-@PerkInfo(name = "&6Lava Perk", desc = "&aReceive a lava bucket", cost = 1000, icon = Material.LAVA_BUCKET)
+@PerkInfo(name = "&6Lava Perk", desc = "&aReceive a lava bucket", cost = 450, icon = Material.LAVA_BUCKET)
 public class LavaPerk extends Perk implements Listener {
     public LavaPerk() {
         PitCore.INSTANCE.getPlugin().getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
@@ -25,7 +25,6 @@ public class LavaPerk extends Perk implements Listener {
         }
         super.onClick(player);
     }
-
 
     @Override
     public void onLayout(PlayerData player) {

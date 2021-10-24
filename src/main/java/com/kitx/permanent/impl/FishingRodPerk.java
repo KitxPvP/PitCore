@@ -7,7 +7,7 @@ import com.kitx.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-@PerkInfo(name = "&aFishingRod", desc = "&aReceive a fishing rod on load out", cost = 1000, icon = Material.FISHING_ROD)
+@PerkInfo(name = "&aFishingRod", desc = "&aReceive a fishing rod on load out", cost = 550, icon = Material.FISHING_ROD)
 public class FishingRodPerk extends Perk {
 
     @Override
