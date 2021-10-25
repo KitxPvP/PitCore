@@ -17,10 +17,10 @@ public class NickCommand implements CommandExecutor {
         if (sender.hasPermission("core.nick")) {
             if (sender instanceof Player) {
                 if (strings.length > 0) {
-                    if(strings[0].length() > 3) {
+                    if(strings[0].length() > 2 && strings[0].length() < 16) {
                         changeName(strings[0], ((Player) sender).getPlayer());
                     } else {
-                        sender.sendMessage(ChatColor.RED + "Too short!");
+                        sender.sendMessage(ChatColor.RED + "Out of characters.");
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Usage: /nick [name]");

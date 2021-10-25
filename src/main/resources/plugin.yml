@@ -17,3 +17,5 @@ commands:
     description: Sets spawn
   nick:
     description: Nickname yourself
+  mystic:
+    description: Opens the mystic gui.

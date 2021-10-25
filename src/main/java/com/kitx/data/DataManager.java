@@ -7,6 +7,7 @@ import com.kitx.listener.DataListener;
 import com.kitx.listener.PlayerListener;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -52,6 +53,9 @@ public enum DataManager {
     public void saveAll() {
         for(PlayerData data : playerDataMap.values()) {
             data.saveData();
+            if(data.getPlayer().hasPermission("core.dev")) {
+                data.getPlayer().sendMessage(ChatColor.RED + "Saving data this may lag!");
+            }
         }
     }
     public PlayerData get(Player player) {

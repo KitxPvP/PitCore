@@ -399,6 +399,11 @@ public class PlayerListener implements Listener {
             Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> {
                 event.getBlock().setType(Material.AIR);
             }, 2400);
+        } else if(itemStack.getType() == Material.COBBLESTONE) {
+            PitCore.INSTANCE.getPendingBlocks().add(event.getBlock());
+            Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> {
+                event.getBlock().setType(Material.AIR);
+            }, 1000);
         }
     }
 }

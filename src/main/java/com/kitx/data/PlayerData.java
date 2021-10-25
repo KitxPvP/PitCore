@@ -1,6 +1,7 @@
 package com.kitx.data;
 
 import com.kitx.PitCore;
+import com.kitx.mystic.MysticItem;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.scoreboard.FastBoard;
@@ -43,7 +44,9 @@ public class PlayerData {
     private final List<Location> pendingBlocks = new ArrayList<>();
     private final List<Perk> purchasedPerks = new ArrayList<>();
     private final EvictingList<Perk> perks = new EvictingList<>(3);
+    private final List<MysticItem> mysticItems = new ArrayList<>();
     private final String prefix;
+    private PlayerData lastPlayer;
     private double damageMultiplier;
     private long lastKill;
 
@@ -170,6 +173,12 @@ public class PlayerData {
             for (Perk perk : getPurchasedPerks()) {
                 load.set("purchasedPerks." + perk.getName(), perk.getName());
             }
+            for(MysticItem mysticItem : getMysticItems()) {
+                load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".name", mysticItem.getName());
+                load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".tier", mysticItem.getTier());
+                load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".lives", mysticItem.getLives());
+                load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".lore", mysticItem.getLore());
+            }
 
             try {
                 load.save(player);
@@ -191,7 +200,7 @@ public class PlayerData {
         player.getInventory().addItem(ItemUtils.createItem(Material.BOW));
 
         ItemStack itemStack = new ItemStack(Material.ARROW);
-        itemStack.setAmount(30);
+        itemStack.setAmount(16);
         player.getInventory().setItem(8, itemStack);
 
         player.getInventory().setChestplate(ItemUtils.createItem(Material.IRON_CHESTPLATE));
@@ -238,6 +247,15 @@ public class PlayerData {
             }
             for (String key : load.getConfigurationSection("purchasedPerks").getKeys(false)) {
                 purchasedPerks.add(PerkLoader.INSTANCE.findItem(load.getString("purchasedPerks." + key)));
+            }
+            for(String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
+                String name = load.getString("mysticItems." + key + ".name");
+                int tier = load.getInt("mysticItems." + key + ".tier");
+                int lives = load.getInt("mysticItems." + key + ".lives");
+                List<String> listedLore = load.getStringList("mysticItems." + key + ".lore");
+                String[] lore = new String[listedLore.size()];
+                for(int i = 0; i < listedLore.size(); i++) lore[i] = listedLore.get(i);
+                mysticItems.add(new MysticItem(name, tier, lives, lore));
             }
         }
     }
