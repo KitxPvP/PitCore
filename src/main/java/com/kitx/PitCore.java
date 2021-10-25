@@ -6,6 +6,7 @@ import com.kitx.data.DataManager;
 import com.kitx.manager.GoldDropManager;
 import com.kitx.manager.HealthBarManager;
 import com.kitx.manager.TagManager;
+import com.kitx.mystic.MysticLoader;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.manager.ScoreboardManager;
 import lombok.Getter;
@@ -52,6 +53,7 @@ public enum PitCore {
         }
         if(!spawn.exists()) {
             try {
+                //noinspection ResultOfMethodCallIgnored
                 spawn.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -67,6 +69,7 @@ public enum PitCore {
 
 
         PerkLoader.INSTANCE.init();
+        MysticLoader.INSTANCE.init();
         DataManager.INSTANCE.init(plugin);
         handleBukkit();
         Config.loadConfig();
@@ -87,5 +90,7 @@ public enum PitCore {
         plugin.getCommand("spawn").setExecutor(new SpawnCommand());
         plugin.getCommand("setspawn").setExecutor(new SetSpawn());
         plugin.getCommand("nick").setExecutor(new NickCommand());
+        plugin.getCommand("mystic").setExecutor(new MysticCommand());
+        plugin.getCommand("prestige").setExecutor(new PrestigeCommand());
     }
 }

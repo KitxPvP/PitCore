@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 @Getter
 @RequiredArgsConstructor
-public class Perk implements Listener {
+public abstract class Perk implements Listener {
     private final String name, desc;
     private final int cost;
     private final Material icon;

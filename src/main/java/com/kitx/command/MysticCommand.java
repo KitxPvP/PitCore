@@ -2,6 +2,7 @@ package com.kitx.command;
 
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
+import com.kitx.gui.impl.MysticGui;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +16,7 @@ public class MysticCommand implements CommandExecutor {
             Player player = ((Player) sender).getPlayer();
             PlayerData data = DataManager.INSTANCE.get(player);
             if(data.getPrestige() > 0) {
-                //Gui here...
+                new MysticGui(data).openGui();
             } else {
                 player.sendMessage(ChatColor.RED + "You must be prestige to use this.");
             }

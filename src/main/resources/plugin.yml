@@ -3,6 +3,7 @@ description: KitX pit core
 version: 1.0
 main: com.kitx.PitCorePlugin
 author: Parametric, IWolfZ
+depend: [WorldGuard]
 
 commands:
   perks:
@@ -19,3 +20,5 @@ commands:
     description: Nickname yourself
   mystic:
     description: Opens the mystic gui.
+  prestige:
+    description: Opens the prestige gui.

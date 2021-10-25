@@ -252,6 +252,17 @@ public class FastBoard {
     }
 
     /**
+     * Remove a scoreboard line.
+     *
+     * @param line the line number
+     */
+    public synchronized void removeLine(String line) {
+        List<String> newLines = new ArrayList<>(this.lines);
+        newLines.remove(line);
+        updateLines(newLines);
+    }
+
+    /**
      * Update all the scoreboard lines.
      *
      * @param lines the new lines

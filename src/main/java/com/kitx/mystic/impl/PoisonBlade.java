@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 public class PoisonBlade extends MysticItem {
 
     public PoisonBlade(int tier, int lives) {
-        super("&2Poison Blade", tier, lives, "&7Inflicts &2poison &7" + tier + " for " + (tier * 2) + " on the " + (5 - tier) + " hit");
+        super("&2Poison Blade", tier, lives, "&7Inflicts &2poison &7" + tier + " for " + (tier * 2) + "seconds on the " + (5 - tier) + " hit");
     }
 
     @Override

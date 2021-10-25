@@ -22,6 +22,7 @@ public class MysticItem {
      * Calls whenever a player hits with the item
      */
     public void onHit(PlayerData player, PlayerData victim) {
+        hit++;
         if(player.getLastPlayer() != victim)
             hit = 0;
     }

@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
@@ -90,11 +91,11 @@ public class PlayerData {
             color = "4";
         } else if (level >= 90 && level <= 99) {
             color = "5";
-        } else if(level >= 100 && level <= 109) {
+        } else if (level >= 100 && level <= 109) {
             color = "d";
-        } else if(level >= 110 && level <= 119) {
+        } else if (level >= 110 && level <= 119) {
             color = "f";
-        } else if(level >= 120) {
+        } else if (level >= 120) {
             color = "b";
         }
 
@@ -131,16 +132,17 @@ public class PlayerData {
     }
 
     public void saveData() {
+        if (PitCore.INSTANCE.getPlugin().isEnabled()) {
+            new BukkitRunnable() {
 
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                for (Location location : pendingBlocks) {
-                    location.getBlock().setType(Material.AIR);
+                @Override
+                public void run() {
+                    for (Location location : pendingBlocks) {
+                        location.getBlock().setType(Material.AIR);
+                    }
                 }
-            }
-        }.runTask(PitCore.INSTANCE.getPlugin());
+            }.runTask(PitCore.INSTANCE.getPlugin());
+        }
 
 
         final File dir = new File(PitCore.INSTANCE.getPlugin().getDataFolder(), "data");
@@ -160,6 +162,7 @@ public class PlayerData {
         } else {
             final YamlConfiguration load = YamlConfiguration.loadConfiguration(player);
             load.set("levels", getLevel());
+            load.set("prestige", getPrestige());
             load.set("kills", getKills());
             load.set("deaths", getDeaths());
             load.set("gold", getGold());
@@ -173,7 +176,7 @@ public class PlayerData {
             for (Perk perk : getPurchasedPerks()) {
                 load.set("purchasedPerks." + perk.getName(), perk.getName());
             }
-            for(MysticItem mysticItem : getMysticItems()) {
+            for (MysticItem mysticItem : getMysticItems()) {
                 load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".name", mysticItem.getName());
                 load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".tier", mysticItem.getTier());
                 load.set("mysticItems." + mysticItem.getClass().getSimpleName() + ".lives", mysticItem.getLives());
@@ -206,9 +209,8 @@ public class PlayerData {
         player.getInventory().setChestplate(ItemUtils.createItem(Material.IRON_CHESTPLATE));
         player.getInventory().setLeggings(ItemUtils.createItem(Material.CHAINMAIL_LEGGINGS));
         player.getInventory().setBoots(ItemUtils.createItem(Material.CHAINMAIL_BOOTS));
-
+        updateMystics();
         player.updateInventory();
-
         for (Perk perk : perks) {
             if (getPerks().contains(perk)) {
                 perk.onLayout(this);
@@ -235,6 +237,7 @@ public class PlayerData {
         } else {
             final YamlConfiguration load = YamlConfiguration.loadConfiguration(player);
             setLevel(load.getInt("levels"));
+            setPrestige(load.getInt("prestige"));
             setKills(load.getInt("kills"));
             setDeaths(load.getInt("deaths"));
             setGold(load.getDouble("gold"));
@@ -248,15 +251,28 @@ public class PlayerData {
             for (String key : load.getConfigurationSection("purchasedPerks").getKeys(false)) {
                 purchasedPerks.add(PerkLoader.INSTANCE.findItem(load.getString("purchasedPerks." + key)));
             }
-            for(String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
+            for (String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
                 String name = load.getString("mysticItems." + key + ".name");
                 int tier = load.getInt("mysticItems." + key + ".tier");
                 int lives = load.getInt("mysticItems." + key + ".lives");
                 List<String> listedLore = load.getStringList("mysticItems." + key + ".lore");
                 String[] lore = new String[listedLore.size()];
-                for(int i = 0; i < listedLore.size(); i++) lore[i] = listedLore.get(i);
+                for (int i = 0; i < listedLore.size(); i++) lore[i] = listedLore.get(i);
                 mysticItems.add(new MysticItem(name, tier, lives, lore));
             }
+        }
+    }
+
+    public void updateMystics() {
+        for (MysticItem item : mysticItems) {
+            ItemStack mystic = ItemUtils.createItem(Material.GOLD_SWORD);
+            ItemMeta meta = mystic.getItemMeta();
+            meta.setDisplayName(ColorUtil.translate(item.getName()));
+            meta.setLore(ColorUtil.translate(item.getLore()));
+            meta.getLore().add("");
+            meta.getLore().add(ColorUtil.translate("&7Lives: &a" + item.getLives()));
+            mystic.setItemMeta(meta);
+            player.getInventory().addItem(mystic);
         }
     }
 
