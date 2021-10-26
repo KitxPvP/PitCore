@@ -13,6 +13,7 @@ import com.kitx.permanent.PerkLoader;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.ItemUtils;
 import com.kitx.utils.RomanNumber;
+import com.sun.tools.javac.jvm.Items;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -34,6 +35,7 @@ import org.bukkit.util.Vector;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlayerListener implements Listener {
@@ -354,7 +356,26 @@ public class PlayerListener implements Listener {
                                             .getConstructor(int.class, int.class)
                                             .newInstance(randomInt(4, 0), randomInt(20, 4));
                                     data.getMysticItems().add(item);
+
+                                    List<ItemStack> found = new ArrayList<>();
+                                    for(ItemStack itemStack : player.getInventory()) {
+                                        if(itemStack == null) continue;
+                                        if(itemStack.getItemMeta() == null) continue;
+                                        if(itemStack.getItemMeta().getDisplayName() == null) continue;
+
+                                        for(MysticItem mysticItem : data.getMysticItems()) {
+                                            String name = mysticItem.getName().replaceAll("&", "\247");
+                                            if(name.equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+                                                found.add(itemStack);
+                                            }
+                                        }
+                                    }
+
+                                    for(ItemStack itemStack : found) {
+                                        player.getInventory().remove(itemStack);
+                                    }
                                     data.updateMystics();
+                                    player.closeInventory();
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                     player.sendMessage(ChatColor.RED + "Something went wrong!");
@@ -399,10 +420,8 @@ public class PlayerListener implements Listener {
                                         try {
                                             if (data.getPerks().get(slot) != null) {
                                                 data.getPerks().set(slot, perk);
-                                                System.out.println("Passed");
                                             }
                                         } catch (Exception ignored) {
-                                            System.out.println("Error");
                                             data.getPerks().add(perk);
                                         }
                                         perk.onClick(data);
