@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
+import javax.swing.plaf.ColorUIResource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -252,13 +253,19 @@ public class PlayerData {
                 purchasedPerks.add(PerkLoader.INSTANCE.findItem(load.getString("purchasedPerks." + key)));
             }
             for (String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
-                String name = load.getString("mysticItems." + key + ".name");
                 int tier = load.getInt("mysticItems." + key + ".tier");
                 int lives = load.getInt("mysticItems." + key + ".lives");
-                List<String> listedLore = load.getStringList("mysticItems." + key + ".lore");
-                String[] lore = new String[listedLore.size()];
-                for (int i = 0; i < listedLore.size(); i++) lore[i] = listedLore.get(i);
-                mysticItems.add(new MysticItem(name, tier, lives, lore));
+
+                try {
+                    Class<?> mysticClass = Class.forName("com.kitx.mystic.impl."+key);
+                    MysticItem item = (MysticItem) mysticClass
+                            .getConstructor(int.class, int.class)
+                            .newInstance(tier, lives);
+                    mysticItems.add(item);
+                } catch (Exception ignored) {
+
+                }
+
             }
         }
     }
@@ -268,9 +275,12 @@ public class PlayerData {
             ItemStack mystic = ItemUtils.createItem(Material.GOLD_SWORD);
             ItemMeta meta = mystic.getItemMeta();
             meta.setDisplayName(ColorUtil.translate(item.getName()));
-            meta.setLore(ColorUtil.translate(item.getLore()));
-            meta.getLore().add("");
-            meta.getLore().add(ColorUtil.translate("&7Lives: &a" + item.getLives()));
+            List<String> lore = new ArrayList<>(item.getLore());
+            lore.add("");
+            lore.add("&7Lives: &a" + item.getLives());
+            lore.add("");
+            lore.add("&7Tier: &a" + RomanNumber.toRoman(item.getTier()));
+            meta.setLore(ColorUtil.translate(lore));
             mystic.setItemMeta(meta);
             player.getInventory().addItem(mystic);
         }

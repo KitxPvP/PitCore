@@ -352,7 +352,7 @@ public class PlayerListener implements Listener {
 
                                     MysticItem item = (MysticItem) mysticClass
                                             .getConstructor(int.class, int.class)
-                                            .newInstance(randomInt(3, 1), randomInt(20, 4));
+                                            .newInstance(randomInt(4, 0), randomInt(20, 4));
                                     data.getMysticItems().add(item);
                                     data.updateMystics();
                                 } catch (Exception ex) {

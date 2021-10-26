@@ -1,6 +1,5 @@
 package com.kitx.permanent.impl;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.kitx.PitCore;
 import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
