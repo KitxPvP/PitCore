@@ -195,7 +195,6 @@ public class PlayerListener implements Listener {
             if (e.getClickedInventory() != null && e.getClickedInventory().getName() != null) {
                 Inventory inventory = e.getInventory();
                 PlayerData data = DataManager.INSTANCE.get(player);
-
                 switch (inventory.getName().toLowerCase()) {
                     case "non-permanent items": {
                         e.setCancelled(true);
@@ -447,6 +446,18 @@ public class PlayerListener implements Listener {
                         } else {
                             player.sendMessage(ChatColor.RED + "You do not have the required level!");
                         }
+                        break;
+                    }
+                    case "chest":
+                    case "ender chest": {
+                        if (e.getCurrentItem() == null) return;
+                        if (e.getCurrentItem().getItemMeta() == null) return;
+                        if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
+                        try {
+                            if(e.getCurrentItem().getItemMeta().getLore().get(0).contains("Lost on death.")) {
+                                e.setCancelled(true);
+                            }
+                        } catch(Exception ignored) {}
                         break;
                     }
                 }
