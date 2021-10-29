@@ -13,7 +13,6 @@ import com.kitx.permanent.PerkLoader;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.ItemUtils;
 import com.kitx.utils.RomanNumber;
-import com.sun.tools.javac.jvm.Items;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -104,7 +103,7 @@ public class PlayerListener implements Listener {
 
                 int chance = (int) ((((percent / 100) + 1) * 0.266) * 100);
 
-                if(randomInt(0, 500) > chance) {
+                if(randomInt(0, 500) < chance) {
                     ItemStack stack = ItemUtils.createItem(Material.GOLD_SWORD);
                     ItemMeta itemMeta = stack.getItemMeta();
                     itemMeta.setDisplayName(ColorUtil.translate("&dUncovered Mystic Item"));
@@ -116,11 +115,7 @@ public class PlayerListener implements Listener {
                     stack.setItemMeta(itemMeta);
                     killer.getInventory().addItem(stack);
                 }
-
             }
-
-
-
         }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(PitCore.INSTANCE.getPlugin(), () -> {
@@ -452,7 +447,6 @@ public class PlayerListener implements Listener {
                     case "ender chest": {
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
-                        if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
                         try {
                             if(e.getCurrentItem().getItemMeta().getLore().get(0).contains("Lost on death.")) {
                                 e.setCancelled(true);

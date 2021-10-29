@@ -54,7 +54,7 @@ public class GoldenHeadPerk extends Perk implements Listener {
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
             Player player = event.getPlayer();
             PlayerData data = DataManager.INSTANCE.get(player);
-            if(data.getGapCD().hasCooldown(3)) {
+            if(data.getGapCD().hasCooldown(1)) {
                 player.playSound(player.getLocation(), Sound.EAT, 1, 1);
 
                 ItemStack itemStack = new ItemStack(event.getItem());
@@ -66,10 +66,10 @@ public class GoldenHeadPerk extends Perk implements Listener {
                 PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 120, 0);
                 PotionEffect absortion = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
 
-                player.addPotionEffect(regen);
-                player.addPotionEffect(instant);
-                player.addPotionEffect(speed);
-                player.addPotionEffect(absortion);
+                player.addPotionEffect(regen, true);
+                player.addPotionEffect(instant, true);
+                player.addPotionEffect(speed, true);
+                player.addPotionEffect(absortion, true);
             } else {
                 player.sendMessage(ChatColor.RED + "Heads are on cooldown for " + data.getGapCD().getSeconds());
             }

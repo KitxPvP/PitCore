@@ -23,6 +23,8 @@ public enum PerkLoader {
         perkList.add(new Mineman());
         perkList.add(new EndlessQuiver());
         perkList.add(new Vampire());
+        perkList.add(new Speedster());
+
     }
 
     public Perk findItem(String name) {
