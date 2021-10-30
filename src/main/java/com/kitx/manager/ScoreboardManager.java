@@ -46,7 +46,7 @@ public class ScoreboardManager {
             final double percent = pData.getXp() * 100D / pData.getNeededXp();
             board.updateLine(2, ColorUtil.translate("&fProgress&7: &b" + "&7(&b" + Math.round(percent) + "%&7)"));
             board.updateLine(3, "");
-            board.updateLine(4, ColorUtil.translate("&fGold&7: &6" + pData.getGold()));
+            board.updateLine(4, ColorUtil.translate("&fGold&7: &6" + pData.getGold()) + "g");
             board.updateLine(5, "");
             board.updateLine(6, ColorUtil.translate("&fStatus&7: " + pData.getStatus().getName()));
             if(pData.getStatus() == PlayerData.Status.BOUNTIED) {

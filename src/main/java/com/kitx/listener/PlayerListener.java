@@ -160,7 +160,7 @@ public class PlayerListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
         String[] args = event.getMessage().split(" ");
-        if (!data.getCountDown().isFinished() && !args[0].toLowerCase().contains("/report") && !args[0].toLowerCase().contains("/sc")) {
+        if (!data.getCountDown().isFinished() && args[0].toLowerCase().contains("/spawn")) {
             event.getPlayer().sendMessage(ChatColor.RED + "You are in combat!");
             event.setCancelled(true);
         }

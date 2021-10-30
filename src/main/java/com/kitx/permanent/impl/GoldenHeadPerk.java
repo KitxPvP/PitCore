@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,7 +38,18 @@ public class GoldenHeadPerk extends Perk implements Listener {
         if (killer != null) {
             PlayerData data = DataManager.INSTANCE.get(killer);
             if (data.getPerks().contains(this)) {
-                killer.getInventory().addItem(goldenHead);
+                found: {
+                    for(ItemStack itemStack : killer.getInventory()) {
+                        try {
+                            if(itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
+                                itemStack.setAmount(itemStack.getAmount() + 1);
+                            }
+                            break found;
+                        } catch (Exception ignored) { }
+                    }
+                    data.getPlayer().getInventory().addItem(goldenHead);
+                }
+
             } else {
                 killer.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
             }
