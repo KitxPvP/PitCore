@@ -34,7 +34,6 @@ import org.bukkit.util.Vector;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PlayerListener implements Listener {
@@ -296,6 +295,7 @@ public class PlayerListener implements Listener {
                         if(e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("\247bPrestige")) {
                             if(data.getLevel() >= 120) {
                                 data.setLevel(1);
+                                data.getPurchasedPerks().clear();
                                 data.getPerks().clear();
                                 data.getMysticItems().clear();
                                 data.setGold(0);

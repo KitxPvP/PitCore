@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,7 +41,7 @@ public class GoldenHeadPerk extends Perk implements Listener {
                     for(ItemStack itemStack : killer.getInventory()) {
                         try {
                             if(itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
-                                itemStack.setAmount(itemStack.getAmount() + 1);
+                                itemStack.setAmount(Math.min(4, itemStack.getAmount() + 1));
                             }
                             break found;
                         } catch (Exception ignored) { }
@@ -74,14 +73,14 @@ public class GoldenHeadPerk extends Perk implements Listener {
                 player.getInventory().removeItem(new ItemStack(itemStack));
                 player.updateInventory();
                 PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
-                PotionEffect instant = new PotionEffect(PotionEffectType.HEAL, 1, 0);
-                PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 120, 0);
-                PotionEffect absortion = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
+                PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 180, 0);
+                PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 20, 0);
+                PotionEffect absorption = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
 
                 player.addPotionEffect(regen, true);
-                player.addPotionEffect(instant, true);
                 player.addPotionEffect(speed, true);
-                player.addPotionEffect(absortion, true);
+                player.addPotionEffect(heal, true);
+                player.addPotionEffect(absorption, true);
             } else {
                 player.sendMessage(ChatColor.RED + "Heads are on cooldown for " + data.getGapCD().getSeconds());
             }

@@ -1,9 +1,7 @@
 package com.kitx.permanent;
 
 import com.kitx.permanent.impl.*;
-import com.kitx.utils.ClassUtils;
 import lombok.Getter;
-import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +21,7 @@ public enum PerkLoader {
         perkList.add(new Mineman());
         perkList.add(new EndlessQuiver());
         perkList.add(new Vampire());
+        perkList.add(new TrickleDown());
         perkList.add(new Speedster());
 
     }

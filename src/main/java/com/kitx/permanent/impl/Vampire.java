@@ -39,7 +39,9 @@ public class Vampire extends Perk implements Listener {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             PlayerData data = DataManager.INSTANCE.get(((Player) event.getDamager()).getPlayer());
             if(data.getPerks().contains(this)) {
-                data.getPlayer().setHealth(Math.min(20, data.getPlayer().getHealth() + 1));
+                if (data.getPlayer().isDead()) {
+                    data.getPlayer().setHealth(Math.min(20, data.getPlayer().getHealth() + 1));
+                }
             }
         }
     }

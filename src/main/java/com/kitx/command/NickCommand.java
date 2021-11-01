@@ -1,15 +1,19 @@
 package com.kitx.command;
 
+import com.kitx.utils.ColorUtil;
+import com.kitx.utils.UUIDFetcher;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.UUID;
 
 public class NickCommand implements CommandExecutor {
     @Override
@@ -18,7 +22,21 @@ public class NickCommand implements CommandExecutor {
             if (sender instanceof Player) {
                 if (strings.length > 0) {
                     if(strings[0].length() > 2 && strings[0].length() < 16) {
-                        changeName(strings[0], ((Player) sender).getPlayer());
+                        new Thread(() -> {
+                            try {
+                                UUID uuid = UUIDFetcher.getUUIDOf(strings[0]);
+                                if (uuid == null) {
+                                    changeName(strings[0], ((Player) sender).getPlayer());
+                                    sender.sendMessage(ColorUtil.translate("&aChanged nick to " + strings[0]));
+                                } else {
+                                    sender.sendMessage(ColorUtil.translate("&cThat nick is already a username!"));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }).start();
+
                     } else {
                         sender.sendMessage(ChatColor.RED + "Out of characters.");
                     }
