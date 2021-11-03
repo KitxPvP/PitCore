@@ -171,6 +171,9 @@ public class PlayerData {
             load.set("neededXp", getNeededXp());
             load.set("bounty", getBounty());
             load.set("killStreak", getKillStreak());
+            load.set("selectedPerks", null);
+            load.set("purchasedPerks", null);
+            load.set("mysticItems", null);
             for (int i = 0; i < perks.size(); i++) {
                 load.set("selectedPerks." + i, perks.get(i).getName());
             }

@@ -21,6 +21,7 @@ public class TrickleDown extends Perk implements Listener {
         if (event.getPlayer().getPerks().contains(this)) {
             Player player = event.getPlayer().getPlayer();
             player.setHealth(Math.min(20, player.getHealth() + 4));
+            event.setGold(10);
         }
     }
 }

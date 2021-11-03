@@ -78,12 +78,10 @@ public class GoldDropManager implements Listener {
             addedGold = Math.round(addedGold * 100.0) / 100.0;
             GoldPickEvent goldPickEvent = new GoldPickEvent(data, addedGold);
             Bukkit.getServer().getPluginManager().callEvent(goldPickEvent);
-            if (!goldPickEvent.isCancelled()) {
-                data.setGold(BigDecimal.valueOf(data.getGold()).add(BigDecimal.valueOf(addedGold)).doubleValue());
-                data.getPlayer().sendMessage(ColorUtil.translate("&6&lGOLD PICKUP! &7from the ground &6" + addedGold + "g"));
-                event.getItem().remove();
-                data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ORB_PICKUP, 1, 1);
-            }
+            data.setGold(BigDecimal.valueOf(data.getGold()).add(BigDecimal.valueOf(goldPickEvent.getGold())).doubleValue());
+            data.getPlayer().sendMessage(ColorUtil.translate("&6&lGOLD PICKUP! &7from the ground &6" + addedGold + "g"));
+            event.getItem().remove();
+            data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ORB_PICKUP, 1, 1);
             event.setCancelled(true);
         }
     }

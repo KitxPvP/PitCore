@@ -37,14 +37,16 @@ public class GoldenHeadPerk extends Perk implements Listener {
         if (killer != null) {
             PlayerData data = DataManager.INSTANCE.get(killer);
             if (data.getPerks().contains(this)) {
-                found: {
-                    for(ItemStack itemStack : killer.getInventory()) {
+                found:
+                {
+                    for (ItemStack itemStack : killer.getInventory()) {
                         try {
-                            if(itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
+                            if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
                                 itemStack.setAmount(Math.min(4, itemStack.getAmount() + 1));
                             }
                             break found;
-                        } catch (Exception ignored) { }
+                        } catch (Exception ignored) {
+                        }
                     }
                     data.getPlayer().getInventory().addItem(goldenHead);
                 }
@@ -61,11 +63,11 @@ public class GoldenHeadPerk extends Perk implements Listener {
     public void onRightClick(PlayerInteractEvent event) {
         if (event.getItem() == null) return;
         if (event.getItem().getItemMeta() == null) return;
-        if(event.getItem().getItemMeta().getDisplayName() == null) return;
+        if (event.getItem().getItemMeta().getDisplayName() == null) return;
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
             Player player = event.getPlayer();
             PlayerData data = DataManager.INSTANCE.get(player);
-            if(data.getGapCD().hasCooldown(1)) {
+            if (data.getGapCD().hasCooldown(1)) {
                 player.playSound(player.getLocation(), Sound.EAT, 1, 1);
 
                 ItemStack itemStack = new ItemStack(event.getItem());
@@ -74,7 +76,7 @@ public class GoldenHeadPerk extends Perk implements Listener {
                 player.updateInventory();
                 PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
                 PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 180, 0);
-                PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 20, 0);
+                PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 1, 0);
                 PotionEffect absorption = new PotionEffect(PotionEffectType.ABSORPTION, 120, 0);
 
                 player.addPotionEffect(regen, true);
