@@ -3,31 +3,32 @@ package com.kitx.permanent;
 import com.kitx.data.PlayerData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 
 @Getter
 @RequiredArgsConstructor
 public abstract class Perk implements Listener {
     private final String name, desc;
-    private final int cost;
+    private final int cost, requiredPrestige;
     private final Material icon;
 
     public Perk() {
-        this.name = getCheckInfo().name();
-        this.desc = getCheckInfo().desc();
-        this.cost = getCheckInfo().cost();
-        this.icon = getCheckInfo().icon();
+        this.name = getPerkInfo().name();
+        this.desc = getPerkInfo().desc();
+        this.cost = getPerkInfo().cost();
+        this.icon = getPerkInfo().icon();
+        this.requiredPrestige = getPerkInfo().requiredPrestige();
     }
 
     public void onClick(PlayerData player) {}
 
     public void onLayout(PlayerData player) {}
 
-    public PerkInfo getCheckInfo() {
+    public void onKill(PlayerData killer, PlayerData victim) {}
+
+    public PerkInfo getPerkInfo() {
         if (this.getClass().isAnnotationPresent(PerkInfo.class)) {
             return this.getClass().getAnnotation(PerkInfo.class);
         } else {

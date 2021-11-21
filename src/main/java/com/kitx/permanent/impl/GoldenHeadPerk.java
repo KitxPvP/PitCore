@@ -5,7 +5,9 @@ import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkInfo;
+import com.kitx.permanent.PerkLoader;
 import com.kitx.utils.ColorUtil;
+import lombok.ConfigurationKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -30,33 +32,22 @@ public class GoldenHeadPerk extends Perk implements Listener {
         this.goldenHead = skullItem();
     }
 
-    @EventHandler
-    public void onKill(PlayerDeathEvent event) {
-        Player killer = event.getEntity().getKiller();
-
-        if (killer != null) {
-            PlayerData data = DataManager.INSTANCE.get(killer);
-            if (data.getPerks().contains(this)) {
-                found:
-                {
-                    for (ItemStack itemStack : killer.getInventory()) {
-                        try {
-                            if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
-                                itemStack.setAmount(Math.min(4, itemStack.getAmount() + 1));
-                            }
-                            break found;
-                        } catch (Exception ignored) {
-                        }
+    @Override
+    public void onKill(PlayerData killer, PlayerData victim) {
+        if(killer.getPerks().contains(PerkLoader.INSTANCE.findPerk("&aVampire"))) return;
+        found:
+        {
+            for (ItemStack itemStack : killer.getPlayer().getInventory()) {
+                try {
+                    if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(goldenHead.getItemMeta().getDisplayName())) {
+                        itemStack.setAmount(Math.min(3, itemStack.getAmount() + 1));
+                        break found;
                     }
-                    data.getPlayer().getInventory().addItem(goldenHead);
-                }
-
-            } else {
-                killer.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+                } catch (Exception ignored) {}
             }
-
+            killer.getPlayer().getInventory().addItem(goldenHead);
         }
-
+        super.onKill(killer, victim);
     }
 
     @EventHandler

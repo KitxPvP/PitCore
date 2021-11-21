@@ -16,17 +16,18 @@ public enum PerkLoader {
         perkList.add(new LavaPerk());
         perkList.add(new FishingRodPerk());
         perkList.add(new GoldenHeadPerk());
-        perkList.add(new StrengthChaining());
-        perkList.add(new SafetyFirst());
-        perkList.add(new Mineman());
-        perkList.add(new EndlessQuiver());
-        perkList.add(new Vampire());
-        perkList.add(new TrickleDown());
-        perkList.add(new Speedster());
+        perkList.add(new StrengthChainingPerk());
+        perkList.add(new SafetyFirstPerk());
+        perkList.add(new MinemanPerk());
+        perkList.add(new EndlessQuiverPerk());
+        perkList.add(new VampirePerk());
+        perkList.add(new TrickleDownPerk());
+        perkList.add(new SpeedsterPerk());
+        perkList.add(new DirtyPerk());
 
     }
 
-    public Perk findItem(String name) {
+    public Perk findPerk(String name) {
         for(Perk perk : perkList) {
             if(perk.getName().equalsIgnoreCase(name))
                 return perk;

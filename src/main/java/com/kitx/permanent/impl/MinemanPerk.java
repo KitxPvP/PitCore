@@ -14,21 +14,17 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 @PerkInfo(name = "&eMineman", desc = "&7Spawn with &f24 cobblestone &7and a diamond pickaxe.", cost = 3000, icon = Material.COBBLESTONE)
-public class Mineman extends Perk implements Listener {
-    public Mineman() {
+public class MinemanPerk extends Perk implements Listener {
+    public MinemanPerk() {
         Bukkit.getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
-    @EventHandler
-    public void onKill(PlayerDeathEvent event) {
-        if (event.getEntity().getKiller() != null) {
-            PlayerData data = DataManager.INSTANCE.get(event.getEntity().getKiller());
-            if (data.getPerks().contains(this)) {
-                ItemStack itemStack = new ItemStack(Material.COBBLESTONE);
-                itemStack.setAmount(3);
-                data.getPlayer().getInventory().addItem(itemStack);
-            }
-        }
+    @Override
+    public void onKill(PlayerData killer, PlayerData victim) {
+        ItemStack itemStack = new ItemStack(Material.COBBLESTONE);
+        itemStack.setAmount(3);
+        killer.getPlayer().getInventory().addItem(itemStack);
+        super.onKill(killer, victim);
     }
 
     @Override

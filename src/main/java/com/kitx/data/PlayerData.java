@@ -6,21 +6,27 @@ import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.*;
+import jdk.javadoc.internal.doclets.toolkit.taglets.ParamTaglet;
 import lombok.Getter;
 import lombok.Setter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import javax.swing.plaf.ColorUIResource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +66,7 @@ public class PlayerData {
         LuckPerms api = LuckPermsProvider.get();
         User user = api.getPlayerAdapter(Player.class).getUser(player);
         this.prefix = user.getCachedData().getMetaData().getPrefix();
+        Bukkit.getScheduler().runTask(PitCore.INSTANCE.getPlugin(), this::registerNameTag);
     }
 
     public void bountyPlayer(double bounty) {
@@ -250,10 +257,10 @@ public class PlayerData {
             setBounty(load.getInt("bounty"));
             setKillStreak(load.getInt("killStreak"));
             for (String key : load.getConfigurationSection("selectedPerks").getKeys(false)) {
-                perks.add(PerkLoader.INSTANCE.findItem(load.getString("selectedPerks." + key)));
+                perks.add(PerkLoader.INSTANCE.findPerk(load.getString("selectedPerks." + key)));
             }
             for (String key : load.getConfigurationSection("purchasedPerks").getKeys(false)) {
-                purchasedPerks.add(PerkLoader.INSTANCE.findItem(load.getString("purchasedPerks." + key)));
+                purchasedPerks.add(PerkLoader.INSTANCE.findPerk(load.getString("purchasedPerks." + key)));
             }
             for (String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
                 int tier = load.getInt("mysticItems." + key + ".tier");
@@ -286,6 +293,37 @@ public class PlayerData {
             meta.setLore(ColorUtil.translate(lore));
             mystic.setItemMeta(meta);
             player.getInventory().addItem(mystic);
+        }
+    }
+    // https://www.spigotmc.org/threads/change-name-above-head-spigot-1-8.66314/
+    public void updateNameTag() {
+        Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+        sb.getTeam(player.getName()).setPrefix(getHeader() + " ");
+    }
+
+    public void unregisterNameTag() {
+        Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+        sb.getTeam(player.getName()).unregister();
+    }
+
+    public void respawn() {
+        List<MysticItem> found = new ArrayList<>();
+        for(MysticItem mysticItem : mysticItems) {
+            mysticItem.setLives(mysticItem.getLives() - 1);
+            if(mysticItem.getLives() == 0) found.add(mysticItem);
+        }
+        mysticItems.removeAll(found);
+
+        loadLayout();
+        countDown.setSeconds(0);
+    }
+
+    public void registerNameTag() {
+        Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+        if(sb.getTeam(player.getName()) == null) {
+            Team team = sb.registerNewTeam(player.getName());
+            team.setPrefix(getHeader() + " ");
+            team.addPlayer(player);
         }
     }
 

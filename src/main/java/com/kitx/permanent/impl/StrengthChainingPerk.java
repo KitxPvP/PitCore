@@ -15,8 +15,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 @PerkInfo(name = "&aStrength-Chaining", desc = "&c+8% damage &7for 7s stacking on kill", icon = Material.REDSTONE, cost = 2600)
-public class StrengthChaining extends Perk implements Listener {
-    public StrengthChaining() {
+public class StrengthChainingPerk extends Perk implements Listener {
+    public StrengthChainingPerk() {
         Bukkit.getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
@@ -36,18 +36,13 @@ public class StrengthChaining extends Perk implements Listener {
         }
     }
 
-    @EventHandler
-    public void onKill(PlayerDeathEvent event) {
-        if (event.getEntity().getKiller() != null) {
-            Player killer = event.getEntity().getKiller();
-            PlayerData killerData = DataManager.INSTANCE.get(killer);
-            killerData.setLastKill(System.currentTimeMillis());
-            if(killerData.getDamageMultiplier() == 0) {
-                killerData.setDamageMultiplier(0.08);
-            } else {
-                killerData.setDamageMultiplier(Math.min(1, killerData.getDamageMultiplier() * 2));
-            }
+    @Override
+    public void onKill(PlayerData killer, PlayerData victim) {
+        if(killer.getDamageMultiplier() == 0) {
+            killer.setDamageMultiplier(0.08);
+        } else {
+            killer.setDamageMultiplier(Math.min(1, killer.getDamageMultiplier() * 2));
         }
+        super.onKill(killer, victim);
     }
-
 }

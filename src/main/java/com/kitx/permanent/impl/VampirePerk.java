@@ -16,22 +16,17 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 @PerkInfo(name = "&aVampire", desc = "&7Heal &c0.5 &7on hit and regen 1 on kill.", cost = 8000, icon = Material.FERMENTED_SPIDER_EYE)
-public class Vampire extends Perk implements Listener {
+public class VampirePerk extends Perk implements Listener {
 
-    public Vampire() {
+    public VampirePerk() {
         Bukkit.getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
-
-    @EventHandler
-    public void onKill(PlayerDeathEvent event) {
-        if(event.getEntity().getKiller() != null) {
-            PlayerData data = DataManager.INSTANCE.get(event.getEntity().getKiller());
-            if(data.getPerks().contains(this)) {
-                PotionEffect regen = PotionEffectType.REGENERATION.createEffect(160, 0);
-                data.getPlayer().addPotionEffect(regen);
-            }
-        }
+    @Override
+    public void onKill(PlayerData killer, PlayerData victim) {
+        PotionEffect regen = PotionEffectType.REGENERATION.createEffect(160, 0);
+        killer.getPlayer().addPotionEffect(regen);
+        super.onKill(killer, victim);
     }
 
     @EventHandler

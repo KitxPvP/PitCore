@@ -56,6 +56,7 @@ public enum DataManager {
             if(data.getPlayer().hasPermission("core.dev")) {
                 data.getPlayer().sendMessage(ChatColor.RED + "Saving data this may lag!");
             }
+            data.unregisterNameTag();
         }
     }
     public PlayerData get(Player player) {

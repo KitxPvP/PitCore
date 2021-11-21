@@ -11,13 +11,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 @PerkInfo(name = "&eTrickleDown", desc = "&7Gold ingots reward &6+10g &7and heal &c2♥", cost = 1000, icon = Material.GOLD_INGOT)
-public class TrickleDown extends Perk implements Listener {
-    public TrickleDown() {
+public class TrickleDownPerk extends Perk implements Listener {
+    public TrickleDownPerk() {
         Bukkit.getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
     @EventHandler
-    public void onHit(GoldPickEvent event) {
+    public void onGold(GoldPickEvent event) {
         if (event.getPlayer().getPerks().contains(this)) {
             Player player = event.getPlayer().getPlayer();
             player.setHealth(Math.min(20, player.getHealth() + 4));

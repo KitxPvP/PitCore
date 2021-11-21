@@ -39,6 +39,7 @@ public class DataListener implements Listener {
                 }
             }
         }
+        player.unregisterNameTag();
         DataManager.INSTANCE.deject(event.getPlayer());
     }
 }

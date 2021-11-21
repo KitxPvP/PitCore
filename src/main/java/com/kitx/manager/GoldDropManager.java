@@ -38,7 +38,6 @@ public class GoldDropManager implements Listener {
                     break;
                 } else if (block.getType().isSolid() && count > 0) {
                     new BukkitRunnable() {
-
                         @Override
                         public void run() {
                             location.getWorld().dropItemNaturally(block.getLocation(), ItemUtils.createItem(Material.GOLD_INGOT));

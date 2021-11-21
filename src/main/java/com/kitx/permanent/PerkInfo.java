@@ -19,4 +19,6 @@ public @interface PerkInfo {
     int cost();
 
     Material icon();
+
+    int requiredPrestige() default 0;
 }

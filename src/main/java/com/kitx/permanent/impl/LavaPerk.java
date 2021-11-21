@@ -5,7 +5,6 @@ import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkInfo;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 

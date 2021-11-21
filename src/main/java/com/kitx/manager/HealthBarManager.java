@@ -295,7 +295,7 @@ public class HealthBarManager implements Listener {
 
                 return filled.toString();
             } else if ((double)health >= 0.9D * (double)maxHealth && health <= maxHealth) {
-                System.out.println((0.9D * (double)maxHealth + (double)maxHealth) / 2.0D);
+                //System.out.println((0.9D * (double)maxHealth + (double)maxHealth) / 2.0D);
 
                 for(i = 0; i < 9; ++i) {
                     filled.append(this.filledHeartIcon);

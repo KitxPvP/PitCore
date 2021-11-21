@@ -13,20 +13,16 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 @PerkInfo(name = "&eEndless Quiver", desc = "&7Get &f3 arrows &7on arrow hit.", cost = 2000, icon = Material.BOW)
-public class EndlessQuiver extends Perk implements Listener {
-    public EndlessQuiver() {
+public class EndlessQuiverPerk extends Perk implements Listener {
+    public EndlessQuiverPerk() {
         Bukkit.getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
-    @EventHandler
-    public void onKill(PlayerDeathEvent event) {
-        if (event.getEntity().getKiller() != null) {
-            PlayerData data = DataManager.INSTANCE.get(event.getEntity().getKiller());
-            if (data.getPerks().contains(this)) {
-                ItemStack itemStack = new ItemStack(Material.ARROW);
-                itemStack.setAmount(3);
-                data.getPlayer().getInventory().addItem(itemStack);
-            }
-        }
+    @Override
+    public void onKill(PlayerData killer, PlayerData victim) {
+        ItemStack itemStack = new ItemStack(Material.ARROW);
+        itemStack.setAmount(3);
+        killer.getPlayer().getInventory().addItem(itemStack);
+        super.onKill(killer, victim);
     }
 }

@@ -16,22 +16,16 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 @PerkInfo(name = "&eSpeedster", desc = "&7Gain speed 2 for 5 seconds on kill", cost = 900, icon = Material.LEATHER_BOOTS)
-public class Speedster extends Perk implements Listener {
+public class SpeedsterPerk extends Perk implements Listener {
 
-    public Speedster() {
+    public SpeedsterPerk() {
         Bukkit.getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
-
-
-    @EventHandler
-    public void onKill(PlayerDeathEvent event) {
-        if (event.getEntity().getKiller() != null) {
-            PlayerData data = DataManager.INSTANCE.get(event.getEntity().getKiller());
-            if (data.getPerks().contains(this)) {
-                PotionEffect regen = new PotionEffect(PotionEffectType.SPEED, 120, 1);
-                data.getPlayer().addPotionEffect(regen, true);
-            }
-        }
+    @Override
+    public void onKill(PlayerData killer, PlayerData victim) {
+        PotionEffect regen = new PotionEffect(PotionEffectType.SPEED, 120, 1);
+        killer.getPlayer().addPotionEffect(regen, true);
+        super.onKill(killer, victim);
     }
 }

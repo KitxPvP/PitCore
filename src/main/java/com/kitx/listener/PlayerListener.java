@@ -10,6 +10,7 @@ import com.kitx.mystic.MysticItem;
 import com.kitx.mystic.MysticLoader;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
+import com.kitx.permanent.impl.GoldenHeadPerk;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.ItemUtils;
 import com.kitx.utils.RomanNumber;
@@ -30,6 +31,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import java.math.BigDecimal;
@@ -38,88 +40,125 @@ import java.util.List;
 
 public class PlayerListener implements Listener {
 
+
     @EventHandler
     public void onKill(PlayerDeathEvent event) {
-        event.setDeathMessage("");
-        Player killed = event.getEntity();
-        Player killer = event.getEntity().getKiller();
+        if(event.getEntity().getKiller() != null) {
+            Player killed = event.getEntity();
+            Player killer = event.getEntity().getKiller();
 
-        if (killer != null) {
             PlayerData killedUser = DataManager.INSTANCE.get(killed);
             PlayerData killerUser = DataManager.INSTANCE.get(killer);
 
-            killedUser.setDeaths(killedUser.getDeaths() + 1);
-            killerUser.setKills(killerUser.getKills() + 1);
-
-            killerUser.setKillStreak(killerUser.getKillStreak() + 1);
-
-            killedUser.setKillStreak(0);
-
-            double xpAdd = (int) Math.abs(Math.ceil(Math.random() * killerUser.getLevel() - Math.ceil(Math.random() * killerUser.getLevel()))) + 50;
-            killerUser.setXp((int) (killerUser.getXp() + xpAdd));
-
-            if (killerUser.getXp() >= killerUser.getNeededXp()) {
-                killerUser.setXp(0);
-                String lastHeader = killerUser.getHeader();
-                killerUser.setLevel(killerUser.getLevel() + 1);
-                String header = killerUser.getHeader();
-                killerUser.setNeededXp(killerUser.getLevel() * 25);
-                killer.sendTitle(ColorUtil.translate("&b&lLEVEL UP!"), ColorUtil.translate(lastHeader + " &7→ " + header));
-                killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 3, 1);
-            } else {
-                killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
+            for(Perk perk : killerUser.getPerks()) {
+                perk.onKill(killerUser, killedUser);
             }
 
-            double addedGold;
+        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(PitCore.INSTANCE.getPlugin(), () -> {
+            event.getEntity().spigot().respawn();
+        }, 5L);
+    }
+    
+    @EventHandler
+    public void onKill(EntityDamageByEntityEvent event) {
+        if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+            Player killed = (Player) event.getEntity();
+            Player killer = (Player) event.getDamager();
+            if(killed.getHealth() - event.getDamage() < 1) {
+                if (killer != null) {
+                    killed.teleport(Config.getLocation());
+                    killed.setHealth(20);
+                    event.setDamage(0);
+                    for(PotionEffect effect : killed.getActivePotionEffects()){
+                        killed.removePotionEffect(effect.getType());
+                    }
 
-            if (killedUser.getKillStreak() >= 5) {
-                addedGold = killedUser.getKillStreak() / 2.0 + 10;
-            } else {
-                addedGold = randomNumber(10, 5);
-            }
-            addedGold = Math.round(addedGold * 100.0) / 100.0;
-            killerUser.setGold(BigDecimal.valueOf(killerUser.getGold()).add(BigDecimal.valueOf(addedGold)).doubleValue());
+                    PlayerData killedUser = DataManager.INSTANCE.get(killed);
+                    PlayerData killerUser = DataManager.INSTANCE.get(killer);
+                    
+                    boolean hasGoldenHead = false;
+                    
+                    for(Perk perk : killerUser.getPerks()) {
+                        if(perk instanceof GoldenHeadPerk) hasGoldenHead = true;
+                        perk.onKill(killerUser, killedUser);
+                    }
+                    
+                    if(!hasGoldenHead) killer.getPlayer().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+                    
+                    killedUser.respawn();
 
-            killer.sendMessage(ColorUtil.translate(Config.KILL_MESSAGE)
-                    .replaceAll("%player%", killedUser.getHeader() + " \2477" + killed.getName())
-                    .replaceAll("%xp%", String.valueOf(xpAdd))
-                    .replaceAll("%gold%", String.valueOf(addedGold)));
-            killed.sendMessage(ColorUtil.translate(Config.DEATH_MESSAGE)
-                    .replaceAll("%player%", killerUser.getHeader() + " \2477" + killer.getName()));
+                    killedUser.setDeaths(killedUser.getDeaths() + 1);
+                    killerUser.setKills(killerUser.getKills() + 1);
 
-            if (killerUser.getKillStreak() % 5 == 0 && killerUser.getKillStreak() > 0) {
-                Bukkit.broadcastMessage(ColorUtil.translate(Config.KILLSTREAK_MESSAGE)
-                        .replaceAll("%player%", killerUser.getHeader() + " \2477" + killer.getName())
-                        .replaceAll("%streak%", String.format("%s", killerUser.getKillStreak())));
-            }
+                    killerUser.setKillStreak(killerUser.getKillStreak() + 1);
 
-            if (killedUser.getStatus() == PlayerData.Status.BOUNTIED) {
-                PitCore.INSTANCE.getScoreboardManager().get(killedUser).removeLine(9);
-            }
+                    killedUser.setKillStreak(0);
 
-            if(killerUser.getPrestige() > 0) {
-                int percent = killerUser.getPrestige() * 30;
+                    double xpAdd = (int) Math.abs(Math.ceil(Math.random() * killerUser.getLevel() - Math.ceil(Math.random() * killerUser.getLevel()))) + 50;
+                    killerUser.setXp((int) (killerUser.getXp() + xpAdd));
 
-                int chance = (int) ((((percent / 100) + 1) * 0.266) * 100);
+                    if (killerUser.getXp() >= killerUser.getNeededXp()) {
+                        killerUser.setXp(0);
+                        String lastHeader = killerUser.getHeader();
+                        killerUser.setLevel(killerUser.getLevel() + 1);
+                        String header = killerUser.getHeader();
+                        killerUser.setNeededXp(killerUser.getLevel() * 25);
+                        killerUser.updateNameTag();
+                        killer.sendTitle(ColorUtil.translate("&b&lLEVEL UP!"), ColorUtil.translate(lastHeader + " &7→ " + header));
+                        killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 3, 1);
+                    } else {
+                        killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
+                    }
 
-                if(randomInt(0, 500) < chance) {
-                    ItemStack stack = ItemUtils.createItem(Material.GOLD_SWORD);
-                    ItemMeta itemMeta = stack.getItemMeta();
-                    itemMeta.setDisplayName(ColorUtil.translate("&dUncovered Mystic Item"));
-                    List<String> lore = new ArrayList<>();
-                    lore.add(ColorUtil.translate("&7Return to the mystic well."));
-                    lore.add("");
-                    lore.add(ColorUtil.translate("&7Used in the mystic well"));
-                    itemMeta.setLore(lore);
-                    stack.setItemMeta(itemMeta);
-                    killer.getInventory().addItem(stack);
+                    double addedGold;
+
+                    if (killedUser.getKillStreak() >= 5) {
+                        addedGold = killedUser.getKillStreak() / 2.0 + 10;
+                    } else {
+                        addedGold = randomNumber(10, 5);
+                    }
+                    addedGold = Math.round(addedGold * 100.0) / 100.0;
+                    killerUser.setGold(BigDecimal.valueOf(killerUser.getGold()).add(BigDecimal.valueOf(addedGold)).doubleValue());
+
+                    killer.sendMessage(ColorUtil.translate(Config.KILL_MESSAGE)
+                            .replaceAll("%player%", killedUser.getHeader() + " \2477" + killed.getName())
+                            .replaceAll("%xp%", String.valueOf(xpAdd))
+                            .replaceAll("%gold%", String.valueOf(addedGold)));
+                    killed.sendMessage(ColorUtil.translate(Config.DEATH_MESSAGE)
+                            .replaceAll("%player%", killerUser.getHeader() + " \2477" + killer.getName()));
+
+                    if (killerUser.getKillStreak() % 5 == 0 && killerUser.getKillStreak() > 0) {
+                        Bukkit.broadcastMessage(ColorUtil.translate(Config.KILLSTREAK_MESSAGE)
+                                .replaceAll("%player%", killerUser.getHeader() + " \2477" + killer.getName())
+                                .replaceAll("%streak%", String.format("%s", killerUser.getKillStreak())));
+                    }
+
+                    if (killedUser.getStatus() == PlayerData.Status.BOUNTIED) {
+                        PitCore.INSTANCE.getScoreboardManager().get(killedUser).removeLine(9);
+                    }
+
+                    if (killerUser.getPrestige() > 0) {
+                        int percent = killerUser.getPrestige() * 30;
+
+                        int chance = (int) ((((percent / 100) + 1) * 0.266) * 100);
+
+                        if (randomInt(0, 500) < chance) {
+                            ItemStack stack = ItemUtils.createItem(Material.GOLD_SWORD);
+                            ItemMeta itemMeta = stack.getItemMeta();
+                            itemMeta.setDisplayName(ColorUtil.translate("&dUncovered Mystic Item"));
+                            List<String> lore = new ArrayList<>();
+                            lore.add(ColorUtil.translate("&7Return to the mystic well."));
+                            lore.add("");
+                            lore.add(ColorUtil.translate("&7Used in the mystic well"));
+                            itemMeta.setLore(lore);
+                            stack.setItemMeta(itemMeta);
+                            killer.getInventory().addItem(stack);
+                        }
+                    }
                 }
             }
         }
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(PitCore.INSTANCE.getPlugin(), () -> {
-            killed.spigot().respawn();
-        }, 5L);
     }
 
     @EventHandler
@@ -170,16 +209,7 @@ public class PlayerListener implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         PlayerData data = DataManager.INSTANCE.get(player);
-
-        List<MysticItem> found = new ArrayList<>();
-        for(MysticItem mysticItem : data.getMysticItems()) {
-            mysticItem.setLives(mysticItem.getLives() - 1);
-            if(mysticItem.getLives() == 0) found.add(mysticItem);
-        }
-        data.getMysticItems().removeAll(found);
-
-        data.loadLayout();
-        data.getCountDown().setSeconds(0);
+        data.respawn();
     }
 
     @EventHandler
@@ -340,7 +370,7 @@ public class PlayerListener implements Listener {
                                 }
                             }
                         } else if(e.getCurrentItem().getItemMeta().getDisplayName().contains("Discover Item")) {
-                            if(data.getGold() > 5000) {
+                            if(data.getGold() >= 5000) {
                                 data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(5000)).doubleValue());
                                 Class<?> mysticClass = MysticLoader.INSTANCE.MYSTICS[randomInt(0, (MysticLoader.INSTANCE.MYSTICS.length - 1))];
                                 try {
@@ -352,7 +382,7 @@ public class PlayerListener implements Listener {
                                     data.getMysticItems().add(item);
 
                                     List<ItemStack> found = new ArrayList<>();
-                                    for(ItemStack itemStack : player.getInventory()) {
+                                    for(ItemStack itemStack : player.getInventory().getContents()) {
                                         if(itemStack == null) continue;
                                         if(itemStack.getItemMeta() == null) continue;
                                         if(itemStack.getItemMeta().getDisplayName() == null) continue;
@@ -395,14 +425,19 @@ public class PlayerListener implements Listener {
                             if (name.contains(clickedName)) {
 
                                 if (!data.getPurchasedPerks().contains(perk)) {
-                                    if (data.getGold() > perk.getCost()) {
-                                        player.sendMessage(ChatColor.GREEN + "You purchased " + clickedName);
-                                        player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
-                                        data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(perk.getCost())).doubleValue());
-                                        data.getPurchasedPerks().add(perk);
+                                    if(data.getPrestige() >= perk.getRequiredPrestige()) {
+                                        if (data.getGold() > perk.getCost()) {
+                                            player.sendMessage(ChatColor.GREEN + "You purchased " + clickedName);
+                                            player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+                                            data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(perk.getCost())).doubleValue());
+                                            data.getPurchasedPerks().add(perk);
+                                        } else {
+                                            player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                                            player.sendMessage(ChatColor.RED + "You do not have enough gold for that!");
+                                        }
                                     } else {
-                                        player.playSound(player.getLocation(), Sound.FIZZ, 1, 1);
-                                        player.sendMessage(ChatColor.RED + "You do not have enough gold for that!");
+                                        player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                                        player.sendMessage(ChatColor.RED + "You are not the right prestige level for that perk!");
                                     }
                                 } else {
                                     if (data.getPerks().contains(perk)) {
