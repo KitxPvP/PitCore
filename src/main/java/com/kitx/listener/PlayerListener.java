@@ -16,6 +16,7 @@ import com.kitx.utils.ItemUtils;
 import com.kitx.utils.RomanNumber;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +33,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 import java.math.BigDecimal;
@@ -62,10 +64,19 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void onKill(EntityDamageByEntityEvent event) {
-        if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+        if(event.getEntity() instanceof Player) {
             Player killed = (Player) event.getEntity();
-            Player killer = (Player) event.getDamager();
+            Player killer = null;
+            if(event.getDamager() instanceof Player) {
+                killer = (Player) event.getDamager();
+            } else if(event.getDamager() instanceof Arrow) {
+                ProjectileSource source = ((Arrow) event.getDamager()).getShooter();
+                if(source instanceof Player) {
+                    killer = (Player) source;
+                }
+            }
             if(killed.getHealth() - event.getDamage() < 1) {
+                event.setCancelled(true);
                 if (killer != null) {
                     killed.teleport(Config.getLocation());
                     killed.setHealth(20);

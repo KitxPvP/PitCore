@@ -1,8 +1,9 @@
 package com.kitx.events;
 
 import com.kitx.data.PlayerData;
-import lombok.*;
-import org.bukkit.event.Cancellable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

@@ -1,7 +1,6 @@
 package com.kitx.command;
 
 import com.kitx.data.DataManager;
-import com.kitx.gui.impl.SelectGui;
 import com.kitx.gui.impl.SlotGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

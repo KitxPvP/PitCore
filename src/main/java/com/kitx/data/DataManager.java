@@ -9,7 +9,6 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,9 +55,17 @@ public enum DataManager {
             if(data.getPlayer().hasPermission("core.dev")) {
                 data.getPlayer().sendMessage(ChatColor.RED + "Saving data this may lag!");
             }
+        }
+    }
+
+    public void save() {
+        for(PlayerData data : playerDataMap.values()) {
+            data.saveData();;
             data.unregisterNameTag();
         }
     }
+
+
     public PlayerData get(Player player) {
         return playerDataMap.get(player.getUniqueId());
     }

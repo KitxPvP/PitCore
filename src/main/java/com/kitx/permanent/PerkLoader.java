@@ -23,6 +23,7 @@ public enum PerkLoader {
         perkList.add(new VampirePerk());
         perkList.add(new TrickleDownPerk());
         perkList.add(new SpeedsterPerk());
+        perkList.add(new MedicPerk());
         perkList.add(new DirtyPerk());
 
     }

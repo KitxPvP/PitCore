@@ -5,9 +5,6 @@ import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.ColorUtil;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

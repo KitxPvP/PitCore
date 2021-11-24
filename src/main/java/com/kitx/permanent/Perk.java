@@ -4,7 +4,6 @@ import com.kitx.data.PlayerData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 @Getter

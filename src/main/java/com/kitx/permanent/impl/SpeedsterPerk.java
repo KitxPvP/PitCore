@@ -1,17 +1,12 @@
 package com.kitx.permanent.impl;
 
 import com.kitx.PitCore;
-import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkInfo;
-import com.kitx.utils.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

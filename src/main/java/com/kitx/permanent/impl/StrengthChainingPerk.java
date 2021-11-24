@@ -1,7 +1,6 @@
 package com.kitx.permanent.impl;
 
 import com.kitx.PitCore;
-import com.kitx.PitCorePlugin;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
 import com.kitx.permanent.Perk;
@@ -12,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 @PerkInfo(name = "&aStrength-Chaining", desc = "&c+8% damage &7for 7s stacking on kill", icon = Material.REDSTONE, cost = 2600)
 public class StrengthChainingPerk extends Perk implements Listener {

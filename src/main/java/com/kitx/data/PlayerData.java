@@ -6,20 +6,15 @@ import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
 import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.*;
-import jdk.javadoc.internal.doclets.toolkit.taglets.ParamTaglet;
 import lombok.Getter;
 import lombok.Setter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -319,11 +314,14 @@ public class PlayerData {
     }
 
     public void registerNameTag() {
-        Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
-        if(sb.getTeam(player.getName()) == null) {
+        try {
+            Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
             Team team = sb.registerNewTeam(player.getName());
+
             team.setPrefix(getHeader() + " ");
             team.addPlayer(player);
+        } catch (Exception e) {
+            //Ignored
         }
     }
 

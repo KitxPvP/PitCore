@@ -4,7 +4,6 @@ import com.kitx.data.PlayerData;
 import com.kitx.gui.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 
 public class MysticGui extends Menu {
     public MysticGui(PlayerData data) {

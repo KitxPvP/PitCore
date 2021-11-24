@@ -5,20 +5,14 @@ import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.manager.GoldDropManager;
 import com.kitx.manager.HealthBarManager;
+import com.kitx.manager.ScoreboardManager;
 import com.kitx.manager.TagManager;
 import com.kitx.mystic.MysticLoader;
 import com.kitx.permanent.PerkLoader;
-import com.kitx.manager.ScoreboardManager;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
-import javax.swing.text.html.HTML;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,7 +74,7 @@ public enum PitCore {
             block.setType(Material.AIR);
         }
         pendingBlocks.clear();
-        DataManager.INSTANCE.saveAll();
+        DataManager.INSTANCE.save();
     }
 
     public void handleBukkit() {
