@@ -69,8 +69,7 @@ public class GoldDropManager implements Listener {
 
     @EventHandler
     public void pickUp(PlayerPickupItemEvent event) {
-        if (event.getItem().getItemStack() == null) return;
-        if (event.getItem().getItemStack().getItemMeta() == null) return;
+        if (event.getItem().getItemStack() == null || event.getItem().getItemStack().getItemMeta() == null) return;
         if (event.getItem().getItemStack().isSimilar(ItemUtils.createItem(Material.GOLD_INGOT))) {
             PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
             double addedGold = randomNumber(10, 1);
