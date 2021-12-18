@@ -17,7 +17,7 @@ public class RainbowBlade extends MysticItem {
         double yaw = player.getPlayer().getEyeLocation().getYaw();
         if (getHit() == (5 - getTier()) || getTier() >= 5) {
             player.getPlayer().sendMessage(ColorUtil.translate("&7You turned " + player.getPlayer().getName() + " into a rainbow!"));
-            victim.getPlayer().setVelocity(new Vector((getTier()*0.45) * -Math.sin(yaw),getTier()*0.6,(getTier()*0.45) * Math.cos(yaw)));
+            victim.getPlayer().setVelocity(new Vector((getTier()*(getTier()*0.45)) * -Math.sin(yaw),getTier()*0.6,(getTier()*(getTier()*0.45)) * Math.cos(yaw)));
         }
         if (getTier() >= 7) {
             player.getPlayer().setVelocity(new Vector((getTier()*-0.5) * -Math.sin(yaw),getTier()*0.2,(getTier()*-0.5) * Math.cos(yaw)));
