@@ -28,8 +28,7 @@ public class GoldDropManager implements Listener {
     public void spawnItem() {
         Location location = new Location(Config.getLocation().getWorld(), randomNumber(-44, 44), 71, randomNumber(41, -60));
         int count = 0;
-        while (true) {
-            if (count > 20) break;
+        while (count <= 20) {
             if (Config.getLocation() == null) System.out.println("Set spawn for this to work!");
             Block block = getBlockAsync(location);
             if (block != null) {
