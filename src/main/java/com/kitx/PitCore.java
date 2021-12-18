@@ -35,9 +35,6 @@ public enum PitCore {
 
     private PitCorePlugin plugin;
 
-
-
-
     public void onLoad(PitCorePlugin plugin) {
         this.plugin = plugin;
         final File f = new File(plugin.getDataFolder(), "config.yml");
