@@ -28,8 +28,7 @@ public class GoldDropManager implements Listener {
     public void spawnItem() {
         Location location = new Location(Config.getLocation().getWorld(), randomNumber(-44, 44), 71, randomNumber(41, -60));
         int count = 0;
-        while (true) {
-            if (count > 20) break;
+        while (count <= 20) {
             if (Config.getLocation() == null) System.out.println("Set spawn for this to work!");
             Block block = getBlockAsync(location);
             if (block != null) {
@@ -69,8 +68,7 @@ public class GoldDropManager implements Listener {
 
     @EventHandler
     public void pickUp(PlayerPickupItemEvent event) {
-        if (event.getItem().getItemStack() == null) return;
-        if (event.getItem().getItemStack().getItemMeta() == null) return;
+        if (event.getItem().getItemStack() == null || event.getItem().getItemStack().getItemMeta() == null) return;
         if (event.getItem().getItemStack().isSimilar(ItemUtils.createItem(Material.GOLD_INGOT))) {
             PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
             double addedGold = randomNumber(10, 1);
