@@ -37,7 +37,7 @@ public class PlayerData {
     private Status status = Status.IDLE;
     private long lastJumpPad;
 
-    private int level, kills, deaths, xp, neededXp, killStreak, prestige;
+    private int level, kills, deaths, xp, neededXp, killStreak, prestige, scoreboard;
     private double gold, bounty;
 
     private final CountDown countDown = new CountDown(10);
@@ -48,6 +48,7 @@ public class PlayerData {
     private final List<Perk> purchasedPerks = new ArrayList<>();
     private final EvictingList<Perk> perks = new EvictingList<>(3);
     private final List<MysticItem> mysticItems = new ArrayList<>();
+    private final List<Integer> removeLines = new ArrayList<>();
     private final String prefix;
     private PlayerData lastPlayer;
     private double damageMultiplier;
@@ -65,6 +66,12 @@ public class PlayerData {
     }
 
     public void bountyPlayer(double bounty) {
+
+    }
+
+    public int count() {
+        this.scoreboard++;
+        return scoreboard;
 
     }
 
@@ -129,8 +136,7 @@ public class PlayerData {
 
     public void updateStatus() {
         FastBoard board = PitCore.INSTANCE.getScoreboardManager().get(this);
-        board.removeLine(8);
-        board.removeLine(9);
+        removeLines.forEach(board::removeLine);
         status = Status.IDLE;
     }
 
@@ -326,7 +332,7 @@ public class PlayerData {
     }
 
     public enum Status {
-        IDLE("&aIdle"), FIGHTING("&cFighting"), BOUNTIED("&cBountied");
+        IDLE("&aIdling"), FIGHTING("&cFighting"), BOUNTIED("&cBountied");
 
         private final String name;
 

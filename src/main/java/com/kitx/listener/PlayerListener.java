@@ -4,6 +4,7 @@ import com.kitx.PitCore;
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
+import com.kitx.events.PitKillEvent;
 import com.kitx.gui.impl.SelectGui;
 import com.kitx.gui.impl.SlotGui;
 import com.kitx.mystic.MysticItem;
@@ -107,6 +108,20 @@ public class PlayerListener implements Listener {
                     killedUser.setKillStreak(0);
 
                     double xpAdd = (int) Math.abs(Math.ceil(Math.random() * killerUser.getLevel() - Math.ceil(Math.random() * killerUser.getLevel()))) + 50;
+                    double addedGold;
+
+                    if (killedUser.getKillStreak() >= 5) {
+                        addedGold = killedUser.getKillStreak() / 2.0 + 10;
+                    } else {
+                        addedGold = randomNumber(10, 5);
+                    }
+                    addedGold = Math.round(addedGold * 100.0) / 100.0;
+
+                    PitKillEvent pitKillEvent = new PitKillEvent(killedUser, killerUser, addedGold, xpAdd);
+                    Bukkit.getPluginManager().callEvent(pitKillEvent);
+                    addedGold = pitKillEvent.getGold();
+                    xpAdd = pitKillEvent.getXp();
+
                     killerUser.setXp((int) (killerUser.getXp() + xpAdd));
 
                     if (killerUser.getXp() >= killerUser.getNeededXp()) {
@@ -122,14 +137,6 @@ public class PlayerListener implements Listener {
                         killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
                     }
 
-                    double addedGold;
-
-                    if (killedUser.getKillStreak() >= 5) {
-                        addedGold = killedUser.getKillStreak() / 2.0 + 10;
-                    } else {
-                        addedGold = randomNumber(10, 5);
-                    }
-                    addedGold = Math.round(addedGold * 100.0) / 100.0;
                     killerUser.setGold(BigDecimal.valueOf(killerUser.getGold()).add(BigDecimal.valueOf(addedGold)).doubleValue());
 
                     killer.sendMessage(ColorUtil.translate(Config.KILL_MESSAGE)

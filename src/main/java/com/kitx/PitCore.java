@@ -3,10 +3,7 @@ package com.kitx;
 import com.kitx.command.*;
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
-import com.kitx.manager.GoldDropManager;
-import com.kitx.manager.HealthBarManager;
-import com.kitx.manager.ScoreboardManager;
-import com.kitx.manager.TagManager;
+import com.kitx.manager.*;
 import com.kitx.mystic.MysticLoader;
 import com.kitx.permanent.PerkLoader;
 import lombok.Getter;
@@ -31,6 +28,7 @@ public enum PitCore {
     private ScoreboardManager scoreboardManager;
     private HealthBarManager healthBarManager;
     private GoldDropManager goldDropManager;
+    private EventManager eventManager;
     private TagManager tagManager;
 
     private PitCorePlugin plugin;
@@ -57,6 +55,7 @@ public enum PitCore {
         tagManager = new TagManager(plugin);
         healthBarManager = new HealthBarManager(plugin);
         goldDropManager = new GoldDropManager();
+        eventManager = new EventManager(plugin);
 
 
         PerkLoader.INSTANCE.init();
