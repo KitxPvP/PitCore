@@ -6,6 +6,7 @@ import com.kitx.data.PlayerData;
 import com.kitx.events.PitKillEvent;
 import com.kitx.mystic.impl.LightningBlade;
 import com.kitx.mystic.impl.PoisonBlade;
+import com.kitx.mystic.impl.RainbowBlade;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,7 @@ public enum MysticLoader implements Listener {
      * Used for getting the item
      */
     public final Class<?>[] MYSTICS = new Class[] {
-            PoisonBlade.class, LightningBlade.class,
+            PoisonBlade.class, LightningBlade.class, RainbowBlade.class
     };
 
     public void init() {

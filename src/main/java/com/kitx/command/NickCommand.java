@@ -72,7 +72,7 @@ public class NickCommand implements CommandExecutor {
             } catch (ClassNotFoundException ignored) {
 
             }
-            if (!gameProfileExists) {
+            /*if (!gameProfileExists) {
                 /*
                  * Only 1.6 and lower servers will run this code.
                  *
@@ -80,11 +80,12 @@ public class NickCommand implements CommandExecutor {
                  * but as a String in the (final) name field of the EntityHuman class.
                  * Final (non-static) fields can actually be modified by using
                  * {@link java.lang.reflect.Field#setAccessible(boolean)}
-                 */
+
                 Field nameField = entityPlayer.getClass().getSuperclass().getDeclaredField("name");
                 nameField.setAccessible(true);
-                nameField.set(entityPlayer, name);
-            } else {
+                nameField.set(entityPlayer, name); 1.6 isnt on minehut
+            }*/
+            if (gameProfileExists) {
                 // Only 1.7+ servers will run this code
                 Object profile = entityPlayer.getClass().getMethod("getProfile").invoke(entityPlayer);
                 Field ff = profile.getClass().getDeclaredField("name");
