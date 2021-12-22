@@ -82,5 +82,6 @@ public enum PitCore {
         plugin.getCommand("nick").setExecutor(new NickCommand());
         plugin.getCommand("mystic").setExecutor(new MysticCommand());
         plugin.getCommand("prestige").setExecutor(new PrestigeCommand());
+        plugin.getCommand("event").setExecutor(new EventCommand());
     }
 }

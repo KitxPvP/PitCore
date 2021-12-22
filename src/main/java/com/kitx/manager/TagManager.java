@@ -14,8 +14,6 @@ public class TagManager {
                     //This counts as a tag?
                     if (!data.getCountDown().isFinished()) {
                         data.getCountDown().countDown();
-                    } else if (data.getStatus() != PlayerData.Status.BOUNTIED && data.getStatus() != PlayerData.Status.IDLE) {
-                        data.updateStatus();
                     }
                 }
             }

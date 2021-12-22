@@ -1,32 +1,37 @@
 package com.kitx.event;
 
-import com.kitx.data.PlayerData;
+import com.kitx.PitCore;
+import com.kitx.utils.CountDown;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
-public class Event implements Listener {
+public abstract class Event implements Listener {
 
-    private final List<PlayerData> players = new ArrayList<>();
-
+    private final String name;
     private final EventType type;
-    private final int minPlayers, chance, duration;
-
-    public void onJoin(PlayerData data) {
-        players.add(data);
-    }
-
-    public void onLeave(PlayerData data) {
-        players.remove(data);
-    }
-
+    private final int minPlayers, chance;
+    private CountDown duration;
+    private final String desc;
+    
     public void onTick() {
+        duration.countDown();
+        if (duration.isFinished()) {
+            PitCore.INSTANCE.getEventManager().stopCurrentEvent();
+        }
     }
+
+    public String[] onScoreBoard() {
+        return new String[] {};
+    }
+
+    public void onStop() {
+        duration.resetTime();
+    }
+
+    public void onStart() {}
 
     public enum EventType {
         MINI, MAJOR

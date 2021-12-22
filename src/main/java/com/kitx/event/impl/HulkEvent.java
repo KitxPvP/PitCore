@@ -6,10 +6,13 @@ import com.kitx.data.PlayerData;
 import com.kitx.event.Event;
 import com.kitx.events.PitKillEvent;
 import com.kitx.utils.ColorUtil;
+import com.kitx.utils.CountDown;
 import com.kitx.utils.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -20,16 +23,46 @@ public class HulkEvent extends Event {
     private PlayerData hulk;
 
     public HulkEvent() {
-        super(EventType.MAJOR, 8, 20, 500);
+        super("&2&lHULK",EventType.MAJOR, 8, 1000, new CountDown(500), "&7Kill &2Hulk &7to receive tons of gold and xp!");
+    }
+
+    @Override
+    public void onStop() {
+        if(hulk != null) {
+            Bukkit.broadcastMessage(ColorUtil.translate("&e&lEvent hulk has stopped! Player " + hulk.getPlayer().getName() + " has won the event!"));
+            hulk.getPlayer().sendTitle(ColorUtil.translate("&a&lYou have won the event!"), "");
+            hulk.addGold(5000);
+            hulk.loadLayout();
+            hulk.setHulk(false);
+
+        }
+        super.onStop();
     }
 
     @EventHandler
     public void onKill(PitKillEvent event) {
         if(event.getPlayer() == hulk) {
-            setHulk(event.getPlayer());
+            setHulk(event.getKiller());
             event.setGold(event.getGold() * 4);
             event.setXp(event.getXp() * 4);
+            event.getPlayer().setHulk(false);
         }
+    }
+
+    @Override
+    public String[] onScoreBoard() {
+        if(hulk != null) {
+            return new String[]{
+                    "&fHulk&7: &2" + hulk.getPlayer().getName()
+            };
+        }
+        return super.onScoreBoard();
+    }
+
+    @EventHandler
+    public void onKill(PlayerQuitEvent event) {
+        PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
+        if(data == hulk) hulk = null;
     }
 
     @Override
@@ -40,6 +73,7 @@ public class HulkEvent extends Event {
                     .toList();
             if(dataList.size() < 4) {
                 PitCore.INSTANCE.getEventManager().stopCurrentEvent();
+                break;
             }
             setHulk(dataList.get(new Random().nextInt(dataList.size())));
         }
@@ -68,6 +102,8 @@ public class HulkEvent extends Event {
         hulk.getPlayer().updateInventory();
 
         hulk.getPlayer().sendMessage(ColorUtil.translate("&7[&aHulk Event&7] &4You are now the hulk!"));
-        Bukkit.broadcastMessage(ColorUtil.translate("&7[aHulk Event&7] &4" + hulk.getPlayer().getName() + " is now the hulk!"));
+        Bukkit.broadcastMessage(ColorUtil.translate("&7[&eHulk Event&7] &4" + hulk.getPlayer().getName() + " is now the hulk!"));
+        hulk.getPlayer().getWorld().playSound(hulk.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+        hulk.setHulk(true);
     }
 }

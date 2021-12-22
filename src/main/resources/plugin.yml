@@ -22,3 +22,5 @@ commands:
     description: Opens the mystic gui.
   prestige:
     description: Opens the prestige gui.
+  event:
+    description: Used for events!

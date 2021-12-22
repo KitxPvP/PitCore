@@ -32,7 +32,7 @@ public class GoldenHeadPerk extends Perk implements Listener {
 
     @Override
     public void onKill(PlayerData killer, PlayerData victim) {
-        if(killer.getPerks().contains(PerkLoader.INSTANCE.findPerk("&aVampire"))) return;
+        if(killer.getPerks().contains(PerkLoader.INSTANCE.findPerk("&aVampire")) || killer.isHulk()) return;
         found:
         {
             for (ItemStack itemStack : killer.getPlayer().getInventory()) {

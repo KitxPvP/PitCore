@@ -65,8 +65,7 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void onKill(EntityDamageByEntityEvent event) {
-        if(event.getEntity() instanceof Player) {
-            Player killed = (Player) event.getEntity();
+        if(event.getEntity() instanceof Player killed) {
             Player killer = null;
             if(event.getDamager() instanceof Player) {
                 killer = (Player) event.getDamager();
@@ -97,8 +96,6 @@ public class PlayerListener implements Listener {
                     }
                     
                     if(!hasGoldenHead) killer.getPlayer().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
-                    
-                    killedUser.respawn();
 
                     killedUser.setDeaths(killedUser.getDeaths() + 1);
                     killerUser.setKills(killerUser.getKills() + 1);
@@ -131,6 +128,7 @@ public class PlayerListener implements Listener {
                         String header = killerUser.getHeader();
                         killerUser.setNeededXp(killerUser.getLevel() * 25);
                         killerUser.updateNameTag();
+                        //noinspection deprecation
                         killer.sendTitle(ColorUtil.translate("&b&lLEVEL UP!"), ColorUtil.translate(lastHeader + " &7→ " + header));
                         killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 3, 1);
                     } else {
@@ -174,6 +172,8 @@ public class PlayerListener implements Listener {
                             killer.getInventory().addItem(stack);
                         }
                     }
+
+                    killedUser.respawn();
                 }
             }
         }
@@ -232,20 +232,19 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if (e.getWhoClicked() instanceof Player) {
-            Player player = (Player) e.getWhoClicked();
+        if (e.getWhoClicked() instanceof Player player) {
             if (e.getClickedInventory() != null && e.getClickedInventory().getName() != null) {
                 Inventory inventory = e.getInventory();
                 PlayerData data = DataManager.INSTANCE.get(player);
                 switch (inventory.getName().toLowerCase()) {
-                    case "non-permanent items": {
+                    case "non-permanent items" -> {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
                         if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
 
                         switch (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName().toLowerCase())) {
-                            case "diamond sword": {
+                            case "diamond sword" -> {
                                 if (data.getGold() > 150) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(150)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
@@ -262,9 +261,8 @@ public class PlayerListener implements Listener {
                                 } else {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
                                 }
-                                break;
                             }
-                            case "obsidian": {
+                            case "obsidian" -> {
                                 if (data.getGold() > 50) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(50)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.OBSIDIAN);
@@ -282,9 +280,8 @@ public class PlayerListener implements Listener {
                                 } else {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
                                 }
-                                break;
                             }
-                            case "diamond chestplate": {
+                            case "diamond chestplate" -> {
                                 if (data.getGold() > 500) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(500)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
@@ -304,9 +301,8 @@ public class PlayerListener implements Listener {
                                 } else {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
                                 }
-                                break;
                             }
-                            case "diamond boots": {
+                            case "diamond boots" -> {
                                 if (data.getGold() > 300) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(300)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_BOOTS);
@@ -328,20 +324,18 @@ public class PlayerListener implements Listener {
                                 } else {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
                                 }
-                                break;
                             }
                         }
 
-                        break;
                     }
-                    case "prestige": {
+                    case "prestige" -> {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
                         if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
 
-                        if(e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("\247bPrestige")) {
-                            if(data.getLevel() >= 120) {
+                        if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("\247bPrestige")) {
+                            if (data.getLevel() >= 120) {
                                 data.setLevel(1);
                                 data.getPurchasedPerks().clear();
                                 data.getPerks().clear();
@@ -355,9 +349,8 @@ public class PlayerListener implements Listener {
                             }
                         }
 
-                        break;
                     }
-                    case "mystic well": {
+                    case "mystic well" -> {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
@@ -365,7 +358,7 @@ public class PlayerListener implements Listener {
 
                         if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Uncovered Mystic Item")) {
                             switch (e.getCurrentItem().getType()) {
-                                case GOLD_SWORD: {
+                                case GOLD_SWORD -> {
                                     ItemStack sword = new ItemStack(e.getCurrentItem());
                                     ItemMeta swordMeta = sword.getItemMeta();
                                     swordMeta.getLore().remove("\2477Used in the mystic well");
@@ -380,15 +373,13 @@ public class PlayerListener implements Listener {
                                     meta.setLore(lore);
                                     stack.setItemMeta(meta);
                                     e.getInventory().setItem(16, stack);
-                                    break;
                                 }
-                                case BOW: {
+                                case BOW -> {
 
-                                    break;
                                 }
                             }
-                        } else if(e.getCurrentItem().getItemMeta().getDisplayName().contains("Discover Item")) {
-                            if(data.getGold() >= 5000) {
+                        } else if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Discover Item")) {
+                            if (data.getGold() >= 5000) {
                                 data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(5000)).doubleValue());
                                 Class<?> mysticClass = MysticLoader.INSTANCE.MYSTICS[randomInt(0, (MysticLoader.INSTANCE.MYSTICS.length - 1))];
                                 try {
@@ -398,25 +389,10 @@ public class PlayerListener implements Listener {
                                             .getConstructor(int.class, int.class)
                                             .newInstance(randomInt(4, 0), randomInt(20, 4));
                                     data.getMysticItems().add(item);
-
-                                    List<ItemStack> found = new ArrayList<>();
-                                    for(ItemStack itemStack : player.getInventory().getContents()) {
-                                        if(itemStack == null) continue;
-                                        if(itemStack.getItemMeta() == null) continue;
-                                        if(itemStack.getItemMeta().getDisplayName() == null) continue;
-
-                                        for(MysticItem mysticItem : data.getMysticItems()) {
-                                            String name = mysticItem.getName().replaceAll("&", "\247");
-                                            if(name.equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
-                                                found.add(itemStack);
-                                            }
-                                        }
+                                    data.addMystic(item);
+                                    if(e.getInventory().getContents()[10] != null) {
+                                        player.getInventory().remove(e.getInventory().getContents()[10]);
                                     }
-
-                                    for(ItemStack itemStack : found) {
-                                        player.getInventory().remove(itemStack);
-                                    }
-                                    data.updateMystics();
                                     player.closeInventory();
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
@@ -427,11 +403,8 @@ public class PlayerListener implements Listener {
                                 player.sendMessage(ChatColor.RED + "Not enough gold!");
                             }
                         }
-                        break;
                     }
-                    case "perks 3":
-                    case "perks 2":
-                    case "perks 1": {
+                    case "perks 3", "perks 2", "perks 1" -> {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
@@ -443,7 +416,7 @@ public class PlayerListener implements Listener {
                             if (name.contains(clickedName)) {
 
                                 if (!data.getPurchasedPerks().contains(perk)) {
-                                    if(data.getPrestige() >= perk.getRequiredPrestige()) {
+                                    if (data.getPrestige() >= perk.getRequiredPrestige()) {
                                         if (data.getGold() > perk.getCost()) {
                                             player.sendMessage(ChatColor.GREEN + "You purchased " + clickedName);
                                             player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
@@ -481,9 +454,8 @@ public class PlayerListener implements Listener {
                         if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Back")) {
                             new SlotGui(data).openGui();
                         }
-                        break;
                     }
-                    case "perk slots": {
+                    case "perk slots" -> {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
@@ -494,18 +466,16 @@ public class PlayerListener implements Listener {
                         } else {
                             player.sendMessage(ChatColor.RED + "You do not have the required level!");
                         }
-                        break;
                     }
-                    case "chest":
-                    case "ender chest": {
+                    case "chest", "ender chest" -> {
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
                         try {
-                            if(e.getCurrentItem().getItemMeta().getLore().get(0).contains("Lost on death.")) {
+                            if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("Lost on death.")) {
                                 e.setCancelled(true);
                             }
-                        } catch(Exception ignored) {}
-                        break;
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
             }
@@ -565,14 +535,10 @@ public class PlayerListener implements Listener {
         if (itemStack == null) return;
         if (itemStack.getType() == Material.OBSIDIAN) {
             PitCore.INSTANCE.getPendingBlocks().add(event.getBlock());
-            Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> {
-                event.getBlock().setType(Material.AIR);
-            }, 2400);
+            Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> event.getBlock().setType(Material.AIR), 2400);
         } else if (itemStack.getType() == Material.COBBLESTONE) {
             PitCore.INSTANCE.getPendingBlocks().add(event.getBlock());
-            Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> {
-                event.getBlock().setType(Material.AIR);
-            }, 1000);
+            Bukkit.getScheduler().runTaskLater(PitCore.INSTANCE.getPlugin(), () -> event.getBlock().setType(Material.AIR), 1000);
         }
     }
 }

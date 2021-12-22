@@ -1,6 +1,7 @@
 package com.kitx.data;
 
 import com.kitx.PitCore;
+import com.kitx.events.RegisterPlayerEvent;
 import com.kitx.mystic.MysticItem;
 import com.kitx.permanent.Perk;
 import com.kitx.permanent.PerkLoader;
@@ -24,6 +25,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,12 +45,15 @@ public class PlayerData {
     private final CountDown countDown = new CountDown(10);
     private final Cooldown chatCD = new Cooldown();
     private final Cooldown gapCD = new Cooldown();
+    private boolean hulk;
 
     private final List<Location> pendingBlocks = new ArrayList<>();
     private final List<Perk> purchasedPerks = new ArrayList<>();
     private final EvictingList<Perk> perks = new EvictingList<>(3);
     private final List<MysticItem> mysticItems = new ArrayList<>();
+    private final List<MysticItem> mysticLoadNow = new ArrayList<>();
     private final List<Integer> removeLines = new ArrayList<>();
+    private final List<Integer> eventLines = new ArrayList<>();
     private final String prefix;
     private PlayerData lastPlayer;
     private double damageMultiplier;
@@ -137,7 +142,14 @@ public class PlayerData {
     public void updateStatus() {
         FastBoard board = PitCore.INSTANCE.getScoreboardManager().get(this);
         removeLines.forEach(board::removeLine);
+        removeLines.clear();
         status = Status.IDLE;
+    }
+
+    public void removeLines() {
+        FastBoard board = PitCore.INSTANCE.getScoreboardManager().get(this);
+        eventLines.forEach(board::removeLine);
+        eventLines.clear();
     }
 
     public void saveData() {
@@ -203,11 +215,16 @@ public class PlayerData {
         }
     }
 
+    public void addGold(double addedGold) {
+        setGold(BigDecimal.valueOf(getGold()).add(BigDecimal.valueOf(addedGold)).doubleValue());
+    }
+
     public void loadLayout() {
 
         for (Location location : pendingBlocks) {
             location.getBlock().setType(Material.AIR);
         }
+        player.getActivePotionEffects().clear();
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
@@ -268,7 +285,7 @@ public class PlayerData {
                 int lives = load.getInt("mysticItems." + key + ".lives");
 
                 try {
-                    Class<?> mysticClass = Class.forName("com.kitx.mystic.impl."+key);
+                    Class<?> mysticClass = Class.forName("com.kitx.mystic.impl." + key);
                     MysticItem item = (MysticItem) mysticClass
                             .getConstructor(int.class, int.class)
                             .newInstance(tier, lives);
@@ -282,7 +299,7 @@ public class PlayerData {
     }
 
     public void updateMystics() {
-        for (MysticItem item : mysticItems) {
+        for (MysticItem item : mysticLoadNow) {
             ItemStack mystic = ItemUtils.createItem(Material.GOLD_SWORD);
             ItemMeta meta = mystic.getItemMeta();
             meta.setDisplayName(ColorUtil.translate(item.getName()));
@@ -295,11 +312,32 @@ public class PlayerData {
             mystic.setItemMeta(meta);
             player.getInventory().addItem(mystic);
         }
+        mysticLoadNow.clear();
     }
+
+    public void addMystic(MysticItem item) {
+        ItemStack mystic = ItemUtils.createItem(Material.GOLD_SWORD);
+        ItemMeta meta = mystic.getItemMeta();
+        meta.setDisplayName(ColorUtil.translate(item.getName()));
+        List<String> lore = new ArrayList<>(item.getLore());
+        lore.add("");
+        lore.add("&7Lives: &a" + item.getLives());
+        lore.add("");
+        lore.add("&7Tier: &a" + RomanNumber.toRoman(item.getTier()));
+        meta.setLore(ColorUtil.translate(lore));
+        mystic.setItemMeta(meta);
+        player.getInventory().addItem(mystic);
+    }
+
     // https://www.spigotmc.org/threads/change-name-above-head-spigot-1-8.66314/
     public void updateNameTag() {
         Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
         sb.getTeam(player.getName()).setPrefix(getHeader() + " ");
+    }
+
+    public void setPrefix(String prefix) {
+        Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+        sb.getTeam(player.getName()).setPrefix(prefix);
     }
 
     public void unregisterNameTag() {
@@ -308,13 +346,6 @@ public class PlayerData {
     }
 
     public void respawn() {
-        List<MysticItem> found = new ArrayList<>();
-        for(MysticItem mysticItem : mysticItems) {
-            mysticItem.setLives(mysticItem.getLives() - 1);
-            if(mysticItem.getLives() == 0) found.add(mysticItem);
-        }
-        mysticItems.removeAll(found);
-
         loadLayout();
         countDown.setSeconds(0);
     }
@@ -326,6 +357,7 @@ public class PlayerData {
 
             team.setPrefix(getHeader() + " ");
             team.addPlayer(player);
+            Bukkit.getPluginManager().callEvent(new RegisterPlayerEvent(this));
         } catch (Exception e) {
             //Ignored
         }
