@@ -3,8 +3,8 @@ package com.kitx.data;
 import com.kitx.PitCore;
 import com.kitx.events.RegisterPlayerEvent;
 import com.kitx.mystic.MysticItem;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkLoader;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkLoader;
 import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.*;
 import lombok.Getter;
@@ -228,7 +228,7 @@ public class PlayerData {
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
-        player.getInventory().addItem(ItemUtils.createItem(Material.IRON_SWORD));
+        player.getInventory().addItem(ItemUtils.createItem(Material.STONE_SWORD));
         player.getInventory().addItem(ItemUtils.createItem(Material.BOW));
 
         ItemStack itemStack = new ItemStack(Material.ARROW);

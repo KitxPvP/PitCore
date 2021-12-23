@@ -1,4 +1,4 @@
-package com.kitx.permanent;
+package com.kitx.perks;
 
 import com.kitx.data.PlayerData;
 import lombok.Getter;

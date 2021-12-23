@@ -1,20 +1,14 @@
-package com.kitx.permanent.impl;
+package com.kitx.perks.impl;
 
-import com.kitx.PitCore;
 import com.kitx.data.PlayerData;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkInfo;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkInfo;
 import com.kitx.utils.ItemUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 @PerkInfo(name = "&eMineman", desc = "&7Spawn with &f24 cobblestone &7and a diamond pickaxe.", cost = 3000, icon = Material.COBBLESTONE)
-public class MinemanPerk extends Perk implements Listener {
-    public MinemanPerk() {
-        Bukkit.getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
-    }
+public class MinemanPerk extends Perk {
 
     @Override
     public void onKill(PlayerData killer, PlayerData victim) {

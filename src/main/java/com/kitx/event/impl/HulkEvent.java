@@ -23,7 +23,7 @@ public class HulkEvent extends Event {
     private PlayerData hulk;
 
     public HulkEvent() {
-        super("&2&lHULK",EventType.MAJOR, 8, 1000, new CountDown(500), "&7Kill &2Hulk &7to receive tons of gold and xp!");
+        super("&2&lHULK",EventType.MAJOR, 8, 1500, new CountDown(300), "&7Kill &2Hulk &7to receive tons of gold and xp!");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class HulkEvent extends Event {
             hulk.addGold(5000);
             hulk.loadLayout();
             hulk.setHulk(false);
-
+            hulk = null;
         }
         super.onStop();
     }
@@ -71,11 +71,12 @@ public class HulkEvent extends Event {
             List<PlayerData> dataList = DataManager.INSTANCE.getPlayerDataMap().values().stream()
                     .filter(data -> data.getStatus() == PlayerData.Status.FIGHTING)
                     .toList();
-            if(dataList.size() < 4) {
+            if(dataList.isEmpty()) {
                 PitCore.INSTANCE.getEventManager().stopCurrentEvent();
                 break;
             }
             setHulk(dataList.get(new Random().nextInt(dataList.size())));
+
         }
         super.onTick();
     }

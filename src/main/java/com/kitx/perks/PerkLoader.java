@@ -1,7 +1,9 @@
-package com.kitx.permanent;
+package com.kitx.perks;
 
-import com.kitx.permanent.impl.*;
+import com.kitx.PitCore;
+import com.kitx.perks.impl.*;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,9 @@ public enum PerkLoader {
         perkList.add(new MedicPerk());
         perkList.add(new DirtyPerk());
 
+        for(Perk perk : perkList) {
+            Bukkit.getPluginManager().registerEvents(perk, PitCore.INSTANCE.getPlugin());
+        }
     }
 
     public Perk findPerk(String name) {

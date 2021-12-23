@@ -6,7 +6,6 @@ import com.kitx.data.PlayerData;
 import com.kitx.event.Event;
 import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.ColorUtil;
-import com.kitx.utils.CountDown;
 import com.kitx.utils.RomanNumber;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +23,6 @@ public class ScoreboardManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-
                 update();
             }
         }.runTaskTimerAsynchronously(PitCore.INSTANCE.getPlugin(), 0, 2);

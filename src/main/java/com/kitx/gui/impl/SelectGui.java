@@ -2,8 +2,8 @@ package com.kitx.gui.impl;
 
 import com.kitx.data.PlayerData;
 import com.kitx.gui.Menu;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkLoader;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 

@@ -1,4 +1,4 @@
-package com.kitx.permanent;
+package com.kitx.perks;
 
 import org.bukkit.Material;
 

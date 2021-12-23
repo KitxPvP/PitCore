@@ -1,20 +1,14 @@
-package com.kitx.permanent.impl;
+package com.kitx.perks.impl;
 
-import com.kitx.PitCore;
 import com.kitx.events.GoldPickEvent;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkInfo;
-import org.bukkit.Bukkit;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkInfo;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 @PerkInfo(name = "&eTrickleDown", desc = "&7Gold ingots reward &6+10g &7and heal &c2♥", cost = 1000, icon = Material.GOLD_INGOT)
-public class TrickleDownPerk extends Perk implements Listener {
-    public TrickleDownPerk() {
-        Bukkit.getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
-    }
+public class TrickleDownPerk extends Perk {
 
     @EventHandler
     public void onGold(GoldPickEvent event) {

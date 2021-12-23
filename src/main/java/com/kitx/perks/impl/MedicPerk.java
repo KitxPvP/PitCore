@@ -1,8 +1,8 @@
-package com.kitx.permanent.impl;
+package com.kitx.perks.impl;
 
 import com.kitx.data.PlayerData;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkInfo;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkInfo;
 import org.bukkit.Material;
 
 @PerkInfo(name = "&cMedic", desc = "&7Have a &920% &7chance to gain full health", cost = 500, icon = Material.APPLE)

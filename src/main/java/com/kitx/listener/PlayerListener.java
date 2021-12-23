@@ -9,9 +9,9 @@ import com.kitx.gui.impl.SelectGui;
 import com.kitx.gui.impl.SlotGui;
 import com.kitx.mystic.MysticItem;
 import com.kitx.mystic.MysticLoader;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkLoader;
-import com.kitx.permanent.impl.GoldenHeadPerk;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkLoader;
+import com.kitx.perks.impl.GoldenHeadPerk;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.ItemUtils;
 import com.kitx.utils.RomanNumber;
@@ -95,7 +95,7 @@ public class PlayerListener implements Listener {
                         perk.onKill(killerUser, killedUser);
                     }
                     
-                    if(!hasGoldenHead) killer.getPlayer().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+                    if(!hasGoldenHead && !killerUser.isHulk()) killer.getPlayer().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
 
                     killedUser.setDeaths(killedUser.getDeaths() + 1);
                     killerUser.setKills(killerUser.getKills() + 1);

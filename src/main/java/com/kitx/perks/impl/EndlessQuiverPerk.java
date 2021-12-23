@@ -1,19 +1,14 @@
-package com.kitx.permanent.impl;
+package com.kitx.perks.impl;
 
-import com.kitx.PitCore;
 import com.kitx.data.PlayerData;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkInfo;
-import org.bukkit.Bukkit;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkInfo;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 @PerkInfo(name = "&eEndless Quiver", desc = "&7Get &f3 arrows &7on arrow hit.", cost = 2000, icon = Material.BOW)
 public class EndlessQuiverPerk extends Perk implements Listener {
-    public EndlessQuiverPerk() {
-        Bukkit.getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
-    }
 
     @Override
     public void onKill(PlayerData killer, PlayerData victim) {

@@ -9,6 +9,7 @@ import com.kitx.utils.ColorUtil;
 import com.kitx.utils.CountDown;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class Teams extends Event {
     public Teams() {
-        super("&e&lTeams", EventType.MAJOR, 2, 1500, new CountDown(400), "&aKill other team members, whichever team wins get's the most xp!");
+        super("&e&lTeams", EventType.MAJOR, 2, 1500, new CountDown(300), "&aKill other team members, whichever team wins get's the most xp!");
     }
 
     private final List<PlayerData> blueTeam = new ArrayList<>();
@@ -55,6 +56,16 @@ public class Teams extends Event {
                     damager.sendMessage(ChatColor.RED + "You cannot attack your own teammate!");
                 }
 
+            }
+        } else if(event.getDamager() instanceof Arrow arrow && event.getEntity() != null) {
+            if(event.getEntity() instanceof Player victim && arrow.getShooter() instanceof Player damager) {
+                PlayerData attacker = DataManager.INSTANCE.get(damager);
+                PlayerData victimUser = DataManager.INSTANCE.get(victim);
+
+                if ((redTeam.contains(attacker) && redTeam.contains(victimUser)) || (blueTeam.contains(attacker) && blueTeam.contains(victimUser))) {
+                    event.setCancelled(true);
+                    damager.sendMessage(ChatColor.RED + "You cannot attack your own teammate!");
+                }
             }
         }
     }

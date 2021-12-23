@@ -1,18 +1,13 @@
-package com.kitx.permanent.impl;
+package com.kitx.perks.impl;
 
-import com.kitx.PitCore;
 import com.kitx.data.PlayerData;
-import com.kitx.permanent.Perk;
-import com.kitx.permanent.PerkInfo;
+import com.kitx.perks.Perk;
+import com.kitx.perks.PerkInfo;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 @PerkInfo(name = "&6Lava Perk", desc = "&aReceive a lava bucket", cost = 450, icon = Material.LAVA_BUCKET)
-public class LavaPerk extends Perk implements Listener {
-    public LavaPerk() {
-        PitCore.INSTANCE.getPlugin().getServer().getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
-    }
+public class LavaPerk extends Perk {
 
     @Override
     public void onClick(PlayerData player) {

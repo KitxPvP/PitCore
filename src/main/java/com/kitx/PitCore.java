@@ -5,7 +5,7 @@ import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.manager.*;
 import com.kitx.mystic.MysticLoader;
-import com.kitx.permanent.PerkLoader;
+import com.kitx.perks.PerkLoader;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

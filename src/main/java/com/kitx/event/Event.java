@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 
 @AllArgsConstructor
 @Getter
-public abstract class Event implements Listener {
+public class Event implements Listener {
 
     private final String name;
     private final EventType type;

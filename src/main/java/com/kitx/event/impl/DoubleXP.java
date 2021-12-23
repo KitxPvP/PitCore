@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 
 public class DoubleXP extends Event {
     public DoubleXP() {
-        super("&eDouble XP",EventType.MINI, 5, 500, new CountDown(500), "&7All kill xp are doubled!");
+        super("&eDouble XP",EventType.MINI, 5, 1000, new CountDown(500), "&7All kill xp are doubled!");
     }
 
     @Override
