@@ -11,8 +11,11 @@ import com.kitx.utils.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -60,9 +63,26 @@ public class HulkEvent extends Event {
     }
 
     @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
+        if(data.isHulk()) {
+            data.setHulk(false);
+            hulk = null;
+        }
+    }
+
+    @EventHandler
     public void onKill(PlayerQuitEvent event) {
         PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
         if(data == hulk) hulk = null;
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if(DataManager.INSTANCE.get(player).isHulk()) {
+            event.setCancelled(true);
+        }
     }
 
     @Override

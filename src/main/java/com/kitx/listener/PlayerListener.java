@@ -75,7 +75,7 @@ public class PlayerListener implements Listener {
                     killer = (Player) source;
                 }
             }
-            if(killed.getHealth() - event.getDamage() < 1) {
+            if(killed.getHealth() - event.getDamage() < 0) {
                 event.setCancelled(true);
                 if (killer != null) {
                     killed.teleport(Config.getLocation());
