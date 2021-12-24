@@ -45,7 +45,7 @@ public class ScoreboardManager {
                 pData.getEventLines().add(pData.getScoreboard());
                 board.updateLine(pData.count(), ColorUtil.translate("&fRemaining: &a" + event.getDuration().convertTime()));
                 pData.getEventLines().add(pData.getScoreboard());
-                for(String line : event.onScoreBoard()) {
+                for(String line : event.onScoreBoard(pData)) {
                     board.updateLine(pData.count(), ColorUtil.translate(line));
                     pData.getEventLines().add(pData.getScoreboard());
                 }

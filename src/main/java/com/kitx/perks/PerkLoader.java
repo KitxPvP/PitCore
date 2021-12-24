@@ -27,10 +27,6 @@ public enum PerkLoader {
         perkList.add(new SpeedsterPerk());
         perkList.add(new MedicPerk());
         perkList.add(new DirtyPerk());
-
-        for(Perk perk : perkList) {
-            Bukkit.getPluginManager().registerEvents(perk, PitCore.INSTANCE.getPlugin());
-        }
     }
 
     public Perk findPerk(String name) {

@@ -220,7 +220,7 @@ public class PlayerData {
     }
 
     public void loadLayout() {
-
+        player.setFireTicks(0);
         for (Location location : pendingBlocks) {
             location.getBlock().setType(Material.AIR);
         }

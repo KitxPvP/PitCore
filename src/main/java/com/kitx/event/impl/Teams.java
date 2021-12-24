@@ -110,6 +110,7 @@ public class Teams extends Event {
             count++;
             if(count % 2 == 0) {
                 blueTeam.add(data);
+                data.getPlayer().sendMessage(ColorUtil.translate("&7You are on the Blue team!"));
             } else {
                 redTeam.add(data);
             }
@@ -119,12 +120,21 @@ public class Teams extends Event {
     }
 
     @Override
-    public String[] onScoreBoard() {
+    public String[] onScoreBoard(PlayerData data) {
         return new String[]{
                 "&fBlue Team&7: &b" + blueTeamKills,
                 "&fRed Team&7: &c" + redTeamKills
         };
     }
 
+
+    final class TempData extends PlayerData {
+
+        private int kills;
+
+        public TempData(Player player) {
+            super(player);
+        }
+    }
 
 }

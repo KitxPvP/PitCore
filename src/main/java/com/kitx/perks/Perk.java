@@ -1,14 +1,16 @@
 package com.kitx.perks;
 
+import com.kitx.PitCore;
 import com.kitx.data.PlayerData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class Perk implements Listener {
+public class Perk implements Listener {
     private final String name, desc;
     private final int cost, requiredPrestige;
     private final Material icon;
@@ -19,6 +21,7 @@ public abstract class Perk implements Listener {
         this.cost = getPerkInfo().cost();
         this.icon = getPerkInfo().icon();
         this.requiredPrestige = getPerkInfo().requiredPrestige();
+        Bukkit.getPluginManager().registerEvents(this, PitCore.INSTANCE.getPlugin());
     }
 
     public void onClick(PlayerData player) {}

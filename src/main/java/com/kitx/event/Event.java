@@ -1,6 +1,7 @@
 package com.kitx.event;
 
 import com.kitx.PitCore;
+import com.kitx.data.PlayerData;
 import com.kitx.utils.CountDown;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class Event implements Listener {
         }
     }
 
-    public String[] onScoreBoard() {
+    public String[] onScoreBoard(PlayerData data) {
         return new String[] {};
     }
 

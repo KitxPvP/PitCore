@@ -53,13 +53,13 @@ public class HulkEvent extends Event {
     }
 
     @Override
-    public String[] onScoreBoard() {
+    public String[] onScoreBoard(PlayerData data) {
         if(hulk != null) {
             return new String[]{
                     "&fHulk&7: &2" + hulk.getPlayer().getName()
             };
         }
-        return super.onScoreBoard();
+        return super.onScoreBoard(data);
     }
 
     @EventHandler

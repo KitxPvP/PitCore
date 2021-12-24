@@ -16,8 +16,11 @@ public class VampirePerk extends Perk {
 
     @Override
     public void onKill(PlayerData killer, PlayerData victim) {
-        PotionEffect regen = PotionEffectType.REGENERATION.createEffect(160, 0);
-        killer.getPlayer().addPotionEffect(regen);
+        PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
+        PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 1, 0);
+
+        killer.getPlayer().addPotionEffect(regen, true);
+        killer.getPlayer().addPotionEffect(heal, true);
         super.onKill(killer, victim);
     }
 

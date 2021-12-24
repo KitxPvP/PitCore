@@ -12,6 +12,7 @@ import com.kitx.mystic.MysticLoader;
 import com.kitx.perks.Perk;
 import com.kitx.perks.PerkLoader;
 import com.kitx.perks.impl.GoldenHeadPerk;
+import com.kitx.perks.impl.VampirePerk;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.ItemUtils;
 import com.kitx.utils.RomanNumber;
@@ -20,6 +21,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -63,8 +65,9 @@ public class PlayerListener implements Listener {
         }, 5L);
     }
     
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onKill(EntityDamageByEntityEvent event) {
+        event.setDamage(event.getDamage() * 0.80);
         if(event.getEntity() instanceof Player killed) {
             Player killer = null;
             if(event.getDamager() instanceof Player) {
@@ -89,14 +92,17 @@ public class PlayerListener implements Listener {
                     PlayerData killerUser = DataManager.INSTANCE.get(killer);
                     
                     boolean hasGoldenHead = false;
+                    boolean hasVampire = false;
                     
                     for(Perk perk : killerUser.getPerks()) {
                         if(perk instanceof GoldenHeadPerk) hasGoldenHead = true;
+                        if(perk instanceof VampirePerk) hasVampire = true;
                         perk.onKill(killerUser, killedUser);
                     }
                     
-                    if(!hasGoldenHead && !killerUser.isHulk()) killer.getPlayer().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+                    if(!hasGoldenHead && !killerUser.isHulk() && !hasVampire) killer.getPlayer().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
 
+                    killerUser.setLastKill(System.currentTimeMillis());
                     killedUser.setDeaths(killedUser.getDeaths() + 1);
                     killerUser.setKills(killerUser.getKills() + 1);
 
