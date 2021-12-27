@@ -78,7 +78,7 @@ public class PlayerListener implements Listener {
                     killer = (Player) source;
                 }
             }
-            if(killed.getHealth() - event.getDamage() < 0) {
+            if(killed.getHealth() - event.getDamage() < 0 && !event.isCancelled()) {
                 event.setCancelled(true);
                 if (killer != null) {
                     killed.teleport(Config.getLocation());
@@ -222,7 +222,7 @@ public class PlayerListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
         String[] args = event.getMessage().split(" ");
-        if (!data.getCountDown().isFinished() && args[0].toLowerCase().contains("/spawn")) {
+        if ((!data.getCountDown().isFinished() || data.isHulk()) && args[0].toLowerCase().contains("/spawn")) {
             event.getPlayer().sendMessage(ChatColor.RED + "You are in combat!");
             event.setCancelled(true);
         }
@@ -450,8 +450,8 @@ public class PlayerListener implements Listener {
                                         } catch (Exception ignored) {
                                             data.getPerks().add(perk);
                                         }
-                                        perk.onClick(data);
                                     }
+
                                 }
                                 new SelectGui(data, slot + 1).openGui();
                                 player.updateInventory();

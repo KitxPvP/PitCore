@@ -5,6 +5,9 @@ import com.kitx.data.PlayerData;
 import com.kitx.event.Event;
 import com.kitx.events.PitKillEvent;
 import com.kitx.events.RegisterPlayerEvent;
+import com.kitx.mystic.MysticItem;
+import com.kitx.perks.Perk;
+import com.kitx.perks.impl.DirtyPerk;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.CountDown;
 import org.bukkit.Bukkit;
@@ -21,7 +24,7 @@ import java.util.List;
 
 public class Teams extends Event {
     public Teams() {
-        super("&e&lTeams", EventType.MAJOR, 2, 1500, new CountDown(300), "&aKill other team members, whichever team wins get's the most xp!");
+        super("&e&lTeams", EventType.MAJOR, 4, 1500, new CountDown(300), "&aKill other team members, whichever team wins get's the most xp!");
     }
 
     private final List<PlayerData> blueTeam = new ArrayList<>();
@@ -55,7 +58,6 @@ public class Teams extends Event {
                     event.setCancelled(true);
                     damager.sendMessage(ChatColor.RED + "You cannot attack your own teammate!");
                 }
-
             }
         } else if(event.getDamager() instanceof Arrow arrow && event.getEntity() != null) {
             if(event.getEntity() instanceof Player victim && arrow.getShooter() instanceof Player damager) {
@@ -110,10 +112,10 @@ public class Teams extends Event {
             count++;
             if(count % 2 == 0) {
                 blueTeam.add(data);
-                data.getPlayer().sendMessage(ColorUtil.translate("&7You are on the Blue team!"));
             } else {
                 redTeam.add(data);
             }
+            data.getPlayer().sendMessage(ColorUtil.translate(blueTeam.contains(data) ? "&b&lYou are on the blue team!" : "&c&lYou are on the red team!"));
         }
 
         super.onStart();
@@ -125,16 +127,6 @@ public class Teams extends Event {
                 "&fBlue Team&7: &b" + blueTeamKills,
                 "&fRed Team&7: &c" + redTeamKills
         };
-    }
-
-
-    final class TempData extends PlayerData {
-
-        private int kills;
-
-        public TempData(Player player) {
-            super(player);
-        }
     }
 
 }

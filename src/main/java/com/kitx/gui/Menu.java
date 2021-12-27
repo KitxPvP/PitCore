@@ -10,8 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 
 public abstract class Menu {
-    public final PlayerData data;
-    public final Inventory inventory;
+    protected final PlayerData data;
+    protected final Inventory inventory;
 
     public Menu(PlayerData data, Inventory inventory) {
         this.data = data;

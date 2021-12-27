@@ -26,41 +26,38 @@ public enum DataManager {
         plugin.getServer().getPluginManager().registerEvents(new DataListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new ChatFormatListener(), plugin);
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             inject(player);
         }
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(PitCore.INSTANCE.getPlugin(), this::saveAll, 0, 6000);
     }
 
     public void inject(Player player) {
-        PitCore.INSTANCE.getExecutorService().execute(() -> {
-            PlayerData data = new PlayerData(player);
-            playerDataMap.put(player.getUniqueId(), data);
-            PitCore.INSTANCE.getScoreboardManager().create(player);
-            data.loadData();
-        });
+        PlayerData data = new PlayerData(player);
+        playerDataMap.put(player.getUniqueId(), data);
+        PitCore.INSTANCE.getScoreboardManager().create(player);
+        data.loadData();
+        data.registerNameTag();
     }
 
     public void deject(Player player) {
-        PitCore.INSTANCE.getExecutorService().execute(() -> {
-            get(player).saveData();
-            PitCore.INSTANCE.getScoreboardManager().remove(player);
-            playerDataMap.remove(player.getUniqueId());
-        });
+        get(player).saveData();
+        PitCore.INSTANCE.getScoreboardManager().remove(player);
+        playerDataMap.remove(player.getUniqueId());
     }
 
     public void saveAll() {
-        for(PlayerData data : playerDataMap.values()) {
+        for (PlayerData data : playerDataMap.values()) {
             data.saveData();
-            if(data.getPlayer().hasPermission("core.dev")) {
+            if (data.getPlayer().hasPermission("core.dev")) {
                 data.getPlayer().sendMessage(ChatColor.RED + "Saving data this may lag!");
             }
         }
     }
 
     public void save() {
-        for(PlayerData data : playerDataMap.values()) {
-            data.saveData();;
+        for (PlayerData data : playerDataMap.values()) {
+            data.saveData();
             data.unregisterNameTag();
         }
     }

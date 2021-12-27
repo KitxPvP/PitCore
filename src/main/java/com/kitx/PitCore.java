@@ -7,6 +7,7 @@ import com.kitx.manager.*;
 import com.kitx.mystic.MysticLoader;
 import com.kitx.perks.PerkLoader;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -71,6 +72,7 @@ public enum PitCore {
         }
         pendingBlocks.clear();
         DataManager.INSTANCE.save();
+        Bukkit.getScheduler().cancelAllTasks();
     }
 
     public void handleBukkit() {

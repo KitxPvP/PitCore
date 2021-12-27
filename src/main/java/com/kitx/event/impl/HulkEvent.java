@@ -101,7 +101,7 @@ public class HulkEvent extends Event {
         super.onTick();
     }
 
-    public void setHulk(PlayerData hulk) {
+    private void setHulk(PlayerData hulk) {
         this.hulk = hulk;
         hulk.getPlayer().getInventory().clear();
         hulk.getPlayer().getInventory().setArmorContents(null);

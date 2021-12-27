@@ -54,27 +54,4 @@ public enum MysticLoader implements Listener {
             player.setLastPlayer(victim);
         }
     }
-
-    @EventHandler
-    public void onDeath(PitKillEvent event) {
-        List<MysticItem> found = new ArrayList<>();
-        for(ItemStack itemStack : event.getPlayer().getPlayer().getInventory().getContents()) {
-            if(itemStack.getItemMeta() == null) return;
-            if(itemStack.getItemMeta().getDisplayName() == null) return;
-
-            String heldName = itemStack.getItemMeta().getDisplayName();
-            for(MysticItem mysticItem : event.getPlayer().getMysticItems()) {
-                String name = mysticItem.getName().replaceAll("&", "\247");
-                if(heldName.equalsIgnoreCase(name)) {
-                    mysticItem.setLives(mysticItem.getLives() - 1);
-                    if (mysticItem.getLives() == 0) {
-                        found.add(mysticItem);
-                    } else {
-                        event.getPlayer().getMysticLoadNow().add(mysticItem);
-                    }
-                }
-            }
-        }
-        event.getPlayer().getMysticItems().removeAll(found);
-    }
 }

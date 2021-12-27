@@ -51,7 +51,6 @@ public class PlayerData {
     private final List<Perk> purchasedPerks = new ArrayList<>();
     private final EvictingList<Perk> perks = new EvictingList<>(3);
     private final List<MysticItem> mysticItems = new ArrayList<>();
-    private final List<MysticItem> mysticLoadNow = new ArrayList<>();
     private final List<Integer> removeLines = new ArrayList<>();
     private final List<Integer> eventLines = new ArrayList<>();
     private final String prefix;
@@ -67,7 +66,6 @@ public class PlayerData {
         LuckPerms api = LuckPermsProvider.get();
         User user = api.getPlayerAdapter(Player.class).getUser(player);
         this.prefix = user.getCachedData().getMetaData().getPrefix();
-        Bukkit.getScheduler().runTask(PitCore.INSTANCE.getPlugin(), this::registerNameTag);
     }
 
     public void bountyPlayer(double bounty) {
@@ -153,16 +151,8 @@ public class PlayerData {
     }
 
     public void saveData() {
-        if (PitCore.INSTANCE.getPlugin().isEnabled()) {
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    for (Location location : pendingBlocks) {
-                        location.getBlock().setType(Material.AIR);
-                    }
-                }
-            }.runTask(PitCore.INSTANCE.getPlugin());
+        for (Location location : pendingBlocks) {
+            location.getBlock().setType(Material.AIR);
         }
 
 
@@ -220,6 +210,27 @@ public class PlayerData {
     }
 
     public void loadLayout() {
+        final List<MysticItem> loaded = new ArrayList<>();
+        final List<MysticItem> found = new ArrayList<>();
+        for(ItemStack itemStack : player.getInventory()) {
+            if(itemStack == null) continue;
+            if(itemStack.getItemMeta() == null) continue;
+            if(itemStack.getItemMeta().getDisplayName() == null) continue;
+
+            String heldName = itemStack.getItemMeta().getDisplayName();
+            for(MysticItem mysticItem : mysticItems) {
+                String name = mysticItem.getName().replaceAll("&", "\247");
+                if(heldName.equalsIgnoreCase(name)) {
+                    mysticItem.setLives(mysticItem.getLives() - 1);
+                    if (mysticItem.getLives() == 0) {
+                        found.add(mysticItem);
+                    } else {
+                        loaded.add(mysticItem);
+                    }
+                }
+            }
+        }
+        mysticItems.removeAll(found);
         player.setFireTicks(0);
         for (Location location : pendingBlocks) {
             location.getBlock().setType(Material.AIR);
@@ -238,7 +249,7 @@ public class PlayerData {
         player.getInventory().setChestplate(ItemUtils.createItem(Material.IRON_CHESTPLATE));
         player.getInventory().setLeggings(ItemUtils.createItem(Material.CHAINMAIL_LEGGINGS));
         player.getInventory().setBoots(ItemUtils.createItem(Material.CHAINMAIL_BOOTS));
-        updateMystics();
+        updateMystics(loaded);
         player.updateInventory();
         for (Perk perk : perks) {
             if (getPerks().contains(perk)) {
@@ -274,45 +285,40 @@ public class PlayerData {
             setNeededXp(load.getInt("neededXp"));
             setBounty(load.getInt("bounty"));
             setKillStreak(load.getInt("killStreak"));
-            for (String key : load.getConfigurationSection("selectedPerks").getKeys(false)) {
-                perks.add(PerkLoader.INSTANCE.findPerk(load.getString("selectedPerks." + key)));
-            }
-            for (String key : load.getConfigurationSection("purchasedPerks").getKeys(false)) {
-                purchasedPerks.add(PerkLoader.INSTANCE.findPerk(load.getString("purchasedPerks." + key)));
-            }
-            for (String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
-                int tier = load.getInt("mysticItems." + key + ".tier");
-                int lives = load.getInt("mysticItems." + key + ".lives");
+            try {
+                for (String key : load.getConfigurationSection("selectedPerks").getKeys(false)) {
+                    perks.add(PerkLoader.INSTANCE.findPerk(load.getString("selectedPerks." + key)));
+                }
+            } catch(Exception ignored) {}
+            try {
+                for (String key : load.getConfigurationSection("purchasedPerks").getKeys(false)) {
+                    purchasedPerks.add(PerkLoader.INSTANCE.findPerk(load.getString("purchasedPerks." + key)));
+                }
+            } catch (Exception ignored) {}
+            try {
+                for (String key : load.getConfigurationSection("mysticItems").getKeys(false)) {
 
-                try {
-                    Class<?> mysticClass = Class.forName("com.kitx.mystic.impl." + key);
-                    MysticItem item = (MysticItem) mysticClass
-                            .getConstructor(int.class, int.class)
-                            .newInstance(tier, lives);
-                    mysticItems.add(item);
-                } catch (Exception ignored) {
+
+                        int tier = load.getInt("mysticItems." + key + ".tier");
+                        int lives = load.getInt("mysticItems." + key + ".lives");
+                        Class<?> mysticClass = Class.forName("com.kitx.mystic.impl." + key);
+                        MysticItem item = (MysticItem) mysticClass
+                                .getConstructor(int.class, int.class)
+                                .newInstance(tier, lives);
+                        mysticItems.add(item);
+
 
                 }
+            } catch(Exception ignored) {
 
             }
         }
     }
 
-    public void updateMystics() {
-        for (MysticItem item : mysticLoadNow) {
-            ItemStack mystic = ItemUtils.createItem(Material.GOLD_SWORD);
-            ItemMeta meta = mystic.getItemMeta();
-            meta.setDisplayName(ColorUtil.translate(item.getName()));
-            List<String> lore = new ArrayList<>(item.getLore());
-            lore.add("");
-            lore.add("&7Lives: &a" + item.getLives());
-            lore.add("");
-            lore.add("&7Tier: &a" + RomanNumber.toRoman(item.getTier()));
-            meta.setLore(ColorUtil.translate(lore));
-            mystic.setItemMeta(meta);
-            player.getInventory().addItem(mystic);
+    public void updateMystics(List<MysticItem> mysticItems) {
+        for (MysticItem item : mysticItems) {
+            addMystic(item);
         }
-        mysticLoadNow.clear();
     }
 
     public void addMystic(MysticItem item) {
