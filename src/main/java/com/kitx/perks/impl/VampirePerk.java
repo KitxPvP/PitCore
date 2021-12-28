@@ -16,6 +16,7 @@ public class VampirePerk extends Perk {
 
     @Override
     public void onKill(PlayerData killer, PlayerData victim) {
+        if(killer.isHulk()) return;
         PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
         PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 1, 0);
 
