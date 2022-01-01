@@ -24,3 +24,5 @@ commands:
     description: Opens the prestige gui.
   event:
     description: Used for events!
+  bounty:
+    description: Adds bounty

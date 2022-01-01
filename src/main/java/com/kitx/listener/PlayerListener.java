@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.math.BigDecimal;
@@ -141,6 +142,19 @@ public class PlayerListener implements Listener {
                         killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
                     }
 
+                    if(killedUser.getStatus() == PlayerData.Status.BOUNTIED) {
+                        for(final Player player : Bukkit.getOnlinePlayers()) {
+                            player.sendMessage(ColorUtil.translate(String.format(
+                                    "&a%s &7killed %s &7for &6%sg",
+                                    killerUser.getPlayer().getName(), killedUser.getHeader() + " \2477" + killed.getName(), killedUser.getBounty()
+                            )));
+                        }
+
+                        killedUser.setStatus(PlayerData.Status.IDLE);
+                        killerUser.addGold(killedUser.getBounty());
+                        killedUser.setBounty(0);
+                    }
+
                     killerUser.setGold(BigDecimal.valueOf(killerUser.getGold()).add(BigDecimal.valueOf(addedGold)).doubleValue());
 
                     killer.sendMessage(ColorUtil.translate(Config.KILL_MESSAGE)
@@ -149,11 +163,21 @@ public class PlayerListener implements Listener {
                             .replaceAll("%gold%", String.valueOf(addedGold)));
                     killed.sendMessage(ColorUtil.translate(Config.DEATH_MESSAGE)
                             .replaceAll("%player%", killerUser.getHeader() + " \2477" + killer.getName()));
+                    if(killedUser.getBukkitTask() != null) killedUser.getBukkitTask().cancel();
 
                     if (killerUser.getKillStreak() % 5 == 0 && killerUser.getKillStreak() > 0) {
                         Bukkit.broadcastMessage(ColorUtil.translate(Config.KILLSTREAK_MESSAGE)
                                 .replaceAll("%player%", killerUser.getHeader() + " \2477" + killer.getName())
                                 .replaceAll("%streak%", String.format("%s", killerUser.getKillStreak())));
+                        if(killerUser.getBukkitTask() == null) {
+                            killerUser.setBukkitTask(new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    killerUser.bountyPlayer(killerUser.getBounty() + 100);
+                                    Bukkit.broadcastMessage(ColorUtil.translate("&6&lBOUNTY! &7bump &6" + killerUser.getBounty() + "g &7on " + killerUser.getHeader() + " &7" + killerUser.getPlayer().getName()));
+                                }
+                            }.runTaskTimer(PitCore.INSTANCE.getPlugin(), 0, 2000));
+                        }
                     }
 
                     if (killedUser.getStatus() == PlayerData.Status.BOUNTIED) {
@@ -513,9 +537,9 @@ public class PlayerListener implements Listener {
             PlayerData damage = DataManager.INSTANCE.get((Player) event.getDamager());
             PlayerData entity = DataManager.INSTANCE.get((Player) event.getEntity());
             damage.getCountDown().resetTime();
-            damage.setStatus(PlayerData.Status.FIGHTING);
+            if(damage.getStatus() != PlayerData.Status.BOUNTIED) damage.setStatus(PlayerData.Status.FIGHTING);
             entity.getCountDown().resetTime();
-            entity.setStatus(PlayerData.Status.FIGHTING);
+            if(entity.getStatus() != PlayerData.Status.BOUNTIED) entity.setStatus(PlayerData.Status.FIGHTING);
         }
     }
 

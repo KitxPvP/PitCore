@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -53,6 +54,7 @@ public class PlayerData {
     private final List<MysticItem> mysticItems = new ArrayList<>();
     private final List<Integer> removeLines = new ArrayList<>();
     private final List<Integer> eventLines = new ArrayList<>();
+    private BukkitTask bukkitTask;
     private final String prefix;
     private PlayerData lastPlayer;
     private double damageMultiplier;
@@ -69,7 +71,8 @@ public class PlayerData {
     }
 
     public void bountyPlayer(double bounty) {
-
+        setStatus(Status.BOUNTIED);
+        this.bounty = bounty;
     }
 
     public int count() {

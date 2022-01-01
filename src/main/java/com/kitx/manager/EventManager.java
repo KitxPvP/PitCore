@@ -40,7 +40,7 @@ public class EventManager {
                     activeEvent.onTick();
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 0, 20);
+        }.runTaskTimer(plugin, 0, 20);
     }
 
     public void startEvent(Event event) {

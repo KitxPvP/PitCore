@@ -62,7 +62,7 @@ public class ScoreboardManager {
             board.updateLine(pData.count(), ColorUtil.translate("&fStatus&7: " + pData.getStatus().getName()));
             switch (pData.getStatus()) {
                 case BOUNTIED -> {
-                    board.updateLine(pData.count(), "&fBounty&7: &6" + pData.getBounty());
+                    board.updateLine(pData.count(), ColorUtil.translate("&fBounty&7: &6" + pData.getBounty()));
                     pData.getRemoveLines().add(pData.getScoreboard());
                 }
                 case FIGHTING -> {
