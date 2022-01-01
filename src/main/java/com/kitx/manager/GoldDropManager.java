@@ -76,7 +76,7 @@ public class GoldDropManager implements Listener {
             GoldPickEvent goldPickEvent = new GoldPickEvent(data, addedGold);
             Bukkit.getServer().getPluginManager().callEvent(goldPickEvent);
             data.setGold(BigDecimal.valueOf(data.getGold()).add(BigDecimal.valueOf(goldPickEvent.getGold())).doubleValue());
-            data.getPlayer().sendMessage(ColorUtil.translate("&6&lGOLD PICKUP! &7from the ground &6" + addedGold + "g"));
+            data.getPlayer().sendMessage(ColorUtil.translate("&6&lGOLD PICKUP! &7from the ground &6" + goldPickEvent.getGold() + "g"));
             event.getItem().remove();
             data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ORB_PICKUP, 1, 1);
             event.setCancelled(true);
