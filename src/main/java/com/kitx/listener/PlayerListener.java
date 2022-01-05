@@ -173,6 +173,7 @@ public class PlayerListener implements Listener {
                             killerUser.setBukkitTask(new BukkitRunnable() {
                                 @Override
                                 public void run() {
+                                    if(killerUser.getCountDown().isFinished()) return;
                                     killerUser.bountyPlayer(killerUser.getBounty() + 100);
                                     Bukkit.broadcastMessage(ColorUtil.translate("&6&lBOUNTY! &7bump &6" + killerUser.getBounty() + "g &7on " + killerUser.getHeader() + " &7" + killerUser.getPlayer().getName()));
                                 }
