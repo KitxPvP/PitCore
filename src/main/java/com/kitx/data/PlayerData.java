@@ -68,6 +68,7 @@ public class PlayerData {
         LuckPerms api = LuckPermsProvider.get();
         User user = api.getPlayerAdapter(Player.class).getUser(player);
         this.prefix = user.getCachedData().getMetaData().getPrefix();
+        registerNameTag();
     }
 
     public void bountyPlayer(double bounty) {

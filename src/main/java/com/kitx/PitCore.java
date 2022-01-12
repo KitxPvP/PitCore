@@ -71,6 +71,7 @@ public enum PitCore {
             block.setType(Material.AIR);
         }
         pendingBlocks.clear();
+
         DataManager.INSTANCE.save();
         Bukkit.getScheduler().cancelAllTasks();
     }
