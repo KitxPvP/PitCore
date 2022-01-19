@@ -243,7 +243,7 @@ public class PlayerData {
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
-        player.getInventory().addItem(ItemUtils.createItem(Material.STONE_SWORD));
+        player.getInventory().addItem(ItemUtils.createItem(Material.IRON_SWORD));
         player.getInventory().addItem(ItemUtils.createItem(Material.BOW));
 
         ItemStack itemStack = new ItemStack(Material.ARROW);

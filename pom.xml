@@ -58,6 +58,10 @@
             <id>lielamar-repo</id>
             <url>https://repo.lielamar.com/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -67,6 +71,13 @@
             <artifactId>api</artifactId>
             <version>5.3</version>
             <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.samjakob</groupId>
+            <artifactId>SpiGUI</artifactId>
+            <version>192e3fb</version>
         </dependency>
 
         <dependency>

@@ -27,6 +27,7 @@ public enum PerkLoader {
         perkList.add(new SpeedsterPerk());
         perkList.add(new MedicPerk());
         perkList.add(new DirtyPerk());
+        perkList.add(new JanitorPerk());
     }
 
     public Perk findPerk(String name) {

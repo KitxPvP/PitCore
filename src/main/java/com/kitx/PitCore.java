@@ -4,8 +4,8 @@ import com.kitx.command.*;
 import com.kitx.config.Config;
 import com.kitx.data.DataManager;
 import com.kitx.manager.*;
-import com.kitx.mystic.MysticLoader;
 import com.kitx.perks.PerkLoader;
+import com.samjakob.spigui.SpiGUI;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,6 +26,7 @@ public enum PitCore {
 
     private final List<Block> pendingBlocks = new ArrayList<>();
 
+    private SpiGUI spiGUI;
     private ScoreboardManager scoreboardManager;
     private HealthBarManager healthBarManager;
     private GoldDropManager goldDropManager;
@@ -52,6 +53,7 @@ public enum PitCore {
     }
 
     public void onEnable() {
+        spiGUI = new SpiGUI(plugin);
         scoreboardManager = new ScoreboardManager();
         tagManager = new TagManager(plugin);
         healthBarManager = new HealthBarManager(plugin);
@@ -60,7 +62,6 @@ public enum PitCore {
 
 
         PerkLoader.INSTANCE.init();
-        MysticLoader.INSTANCE.init();
         DataManager.INSTANCE.init(plugin);
         handleBukkit();
         Config.loadConfig();

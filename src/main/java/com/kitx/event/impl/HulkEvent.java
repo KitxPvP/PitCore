@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -62,6 +63,15 @@ public class HulkEvent extends Event {
         return super.onScoreBoard(data);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onQuit(PlayerQuitEvent event) {
+        PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
+        if(data.isHulk()) {
+            data.loadLayout();
+            hulk = null;
+        }
+    }
+
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         PlayerData data = DataManager.INSTANCE.get(event.getPlayer());
@@ -96,7 +106,9 @@ public class HulkEvent extends Event {
                 break;
             }
             setHulk(dataList.get(new Random().nextInt(dataList.size())));
-
+        }
+        if(hulk != null) {
+            if(!hulk.getPlayer().isOnline()) hulk = null;
         }
         super.onTick();
     }

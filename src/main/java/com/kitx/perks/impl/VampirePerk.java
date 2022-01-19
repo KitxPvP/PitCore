@@ -18,10 +18,8 @@ public class VampirePerk extends Perk {
     public void onKill(PlayerData killer, PlayerData victim) {
         if(killer.isHulk()) return;
         PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 120, 0);
-        PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 1, 0);
 
         killer.getPlayer().addPotionEffect(regen, true);
-        killer.getPlayer().addPotionEffect(heal, true);
         super.onKill(killer, victim);
     }
 
@@ -29,7 +27,7 @@ public class VampirePerk extends Perk {
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             PlayerData data = DataManager.INSTANCE.get(((Player) event.getDamager()).getPlayer());
-            if(data.getPerks().contains(this)) {
+            if(data.getPerks().contains(this) && !data.isHulk()) {
                 if (data.getPlayer().getHealth() != 0) {
                     data.getPlayer().setHealth(Math.min(20, data.getPlayer().getHealth() + 1));
                 }

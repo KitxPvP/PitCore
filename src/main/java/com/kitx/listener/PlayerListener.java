@@ -66,9 +66,9 @@ public class PlayerListener implements Listener {
         }, 5L);
     }
     
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onKill(EntityDamageByEntityEvent event) {
-        event.setDamage(event.getDamage() * 0.80);
+        event.setDamage(event.getDamage() * 0.60);
         if(event.getEntity() instanceof Player killed) {
             Player killer = null;
             if(event.getDamager() instanceof Player) {
