@@ -18,5 +18,13 @@ public class ColorUtil {
         }
         return list;
     }
+
+    public static List<String> translate(String[] message) {
+        List<String> list = new ArrayList<>();
+        for (String string : message) {
+            list.add(ColorUtil.translate(string));
+        }
+        return list;
+    }
 }
     
