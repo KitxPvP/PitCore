@@ -21,7 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @Getter
 public enum PitCore {
     INSTANCE;
-
+    // What u doin man
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private final List<Block> pendingBlocks = new ArrayList<>();
