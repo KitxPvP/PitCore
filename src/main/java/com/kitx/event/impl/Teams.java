@@ -14,8 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -74,6 +76,20 @@ public class Teams extends Event {
         for(PlayerData data : DataManager.INSTANCE.getPlayerDataMap().values()) {
             data.setPrefix(blueTeam.contains(data) ? "\247b" : "\247c");
         }
+
+        if(Math.abs(blueTeamKills - redTeamKills) > 30) {
+            final boolean team = blueTeamKills > redTeamKills;
+            if(team) {
+                for(PlayerData data : redTeam) {
+                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(60, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(60, 0)));
+                }
+            } else {
+                for(PlayerData data : blueTeam) {
+                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(60, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(60, 0)));
+                }
+            }
+        }
+
         super.onTick();
     }
 
