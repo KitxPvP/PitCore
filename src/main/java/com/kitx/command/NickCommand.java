@@ -1,5 +1,7 @@
 package com.kitx.command;
 
+import com.kitx.data.DataManager;
+import com.kitx.data.PlayerData;
 import com.kitx.utils.ColorUtil;
 import com.kitx.utils.UUIDFetcher;
 import org.bukkit.Bukkit;
@@ -27,6 +29,8 @@ public class NickCommand implements CommandExecutor {
                                 UUID uuid = UUIDFetcher.getUUIDOf(strings[0]);
                                 if (uuid == null) {
                                     changeName(strings[0], ((Player) sender).getPlayer());
+                                    PlayerData data = DataManager.INSTANCE.get(((Player) sender).getPlayer());
+                                    data.setPrefix(data.getHeader() + " ");
                                     sender.sendMessage(ColorUtil.translate("&aChanged nick to " + strings[0]));
                                 } else {
                                     sender.sendMessage(ColorUtil.translate("&cThat nick is already a username!"));

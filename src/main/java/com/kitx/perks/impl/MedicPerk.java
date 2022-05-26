@@ -10,8 +10,8 @@ public class MedicPerk extends Perk {
 
     @Override
     public void onKill(PlayerData killer, PlayerData victim) {
-        final double r = randomNumber(1, 20);
-        if(r == 1) {
+        final double r = randomNumber(1, 25);
+        if(r > 20) {
             killer.getPlayer().setHealth(killer.getPlayer().getMaxHealth());
         }
         super.onKill(killer, victim);

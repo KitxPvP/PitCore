@@ -13,7 +13,7 @@ public class SlotGui extends Menu {
 
     @Override
     public void loadMenu() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             Perk perk = null;
             boolean isNull = true;
             try {
@@ -24,20 +24,20 @@ public class SlotGui extends Menu {
             }
 
             if (i == 0) {
-                inventory.setItem(12 + i, createGuiItem(isNull ? Material.DIAMOND_BLOCK : perk.getIcon(),
+                inventory.setItem(11 + i, createGuiItem(isNull ? Material.DIAMOND_BLOCK : perk.getIcon(),
                         "&ePerk Slot #" + (i + 1),
                         "&7Selected: " + (isNull ? "None" : perk.getName()),
                         "",
                         "&eClick to choose perk!"));
             } else {
-                if ((i == 1 && data.getLevel() >= 35) || (i == 2 && data.getLevel() >= 75)) {
-                    inventory.setItem(12 + i, createGuiItem(isNull ? Material.GOLD_BLOCK : perk.getIcon(),
+                if ((i == 1 && data.getLevel() >= 35) || (i == 2 && data.getLevel() >= 75) || (i == 3 && data.getPrestige() > 0) || (i == 4 && data.getPrestige() > 1)) {
+                    inventory.setItem(11 + i, createGuiItem(isNull ? Material.GOLD_BLOCK : perk.getIcon(),
                             "&ePerk Slot #" + (i + 1),
                             "&7Selected: " + (isNull ? "None" : perk.getName()),
                             "",
                             "&eClick to choose perk!"));
                 } else {
-                    inventory.setItem(12 + i, createGuiItem(Material.BEDROCK, "&ePerk Slot #" + (i + 1), "&cRequires level " + (i == 1 ? "35" : "75")));
+                    inventory.setItem(11 + i, createGuiItem(Material.BEDROCK, "&ePerk Slot #" + (i + 1),i < 3 ? "&cRequires level " + (i == 1 ? "35" : "75") : "&cRequires prestige " + (i == 3 ? "I" : "II")));
                 }
             }
         }

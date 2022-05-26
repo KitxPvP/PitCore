@@ -27,7 +27,7 @@ public class HulkEvent extends Event {
     private PlayerData hulk;
 
     public HulkEvent() {
-        super("&2&lHULK",EventType.MAJOR, 8, 1500, new CountDown(300), "&7Kill &2Hulk &7to receive tons of gold and xp!");
+        super("&2&lHULK",EventType.MAJOR, 2, 1500, new CountDown(300), "&7Kill &2Hulk &7to receive tons of gold and xp!");
     }
 
     @Override

@@ -37,6 +37,7 @@ public enum DataManager {
         playerDataMap.put(player.getUniqueId(), data);
         PitCore.INSTANCE.getScoreboardManager().create(player);
         data.loadData();
+        data.registerNameTag();
     }
 
     public void deject(Player player) {

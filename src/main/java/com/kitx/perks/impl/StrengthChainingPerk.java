@@ -9,11 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 
 @PerkInfo(name = "&aStrength-Chaining", desc = "&c+8% damage &7for 7s stacking on kill", icon = Material.REDSTONE, cost = 2600)
 public class StrengthChainingPerk extends Perk {
-
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {

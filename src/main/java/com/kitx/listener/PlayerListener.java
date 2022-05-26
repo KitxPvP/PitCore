@@ -7,8 +7,6 @@ import com.kitx.data.PlayerData;
 import com.kitx.events.PitKillEvent;
 import com.kitx.gui.impl.SelectGui;
 import com.kitx.gui.impl.SlotGui;
-import com.kitx.mystic.MysticItem;
-import com.kitx.mystic.MysticLoader;
 import com.kitx.perks.Perk;
 import com.kitx.perks.PerkLoader;
 import com.kitx.perks.impl.GoldenHeadPerk;
@@ -79,6 +77,7 @@ public class PlayerListener implements Listener {
                     killer = (Player) source;
                 }
             }
+
             if(killed.getHealth() - event.getDamage() < 0 && !event.isCancelled()) {
                 event.setCancelled(true);
                 if (killer != null) {
@@ -183,25 +182,6 @@ public class PlayerListener implements Listener {
 
                     if (killedUser.getStatus() == PlayerData.Status.BOUNTIED) {
                         PitCore.INSTANCE.getScoreboardManager().get(killedUser).removeLine(9);
-                    }
-
-                    if (killerUser.getPrestige() > 0) {
-                        int percent = killerUser.getPrestige() * 30;
-
-                        int chance = (int) ((((percent / 100) + 1) * 0.266) * 100);
-
-                        if (randomInt(0, 500) < chance) {
-                            ItemStack stack = ItemUtils.createItem(Material.GOLD_SWORD);
-                            ItemMeta itemMeta = stack.getItemMeta();
-                            itemMeta.setDisplayName(ColorUtil.translate("&dUncovered Mystic Item"));
-                            List<String> lore = new ArrayList<>();
-                            lore.add(ColorUtil.translate("&7Return to the mystic well."));
-                            lore.add("");
-                            lore.add(ColorUtil.translate("&7Used in the mystic well"));
-                            itemMeta.setLore(lore);
-                            stack.setItemMeta(itemMeta);
-                            killer.getInventory().addItem(stack);
-                        }
                     }
 
                     killedUser.respawn();
@@ -370,7 +350,6 @@ public class PlayerListener implements Listener {
                                 data.setLevel(1);
                                 data.getPurchasedPerks().clear();
                                 data.getPerks().clear();
-                                data.getMysticItems().clear();
                                 data.setGold(0);
                                 data.setPrestige(data.getPrestige() + 1);
                                 data.loadLayout();
@@ -381,61 +360,7 @@ public class PlayerListener implements Listener {
                         }
 
                     }
-                    case "mystic well" -> {
-                        e.setCancelled(true);
-                        if (e.getCurrentItem() == null) return;
-                        if (e.getCurrentItem().getItemMeta() == null) return;
-                        if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
-
-                        if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Uncovered Mystic Item")) {
-                            switch (e.getCurrentItem().getType()) {
-                                case GOLD_SWORD -> {
-                                    ItemStack sword = new ItemStack(e.getCurrentItem());
-                                    ItemMeta swordMeta = sword.getItemMeta();
-                                    swordMeta.getLore().remove("\2477Used in the mystic well");
-                                    sword.setItemMeta(swordMeta);
-
-                                    e.getInventory().setItem(10, sword);
-                                    ItemStack stack = new ItemStack(Material.GOLD_BLOCK);
-                                    ItemMeta meta = stack.getItemMeta();
-                                    meta.setDisplayName(ColorUtil.translate("&dDiscover Item"));
-                                    List<String> lore = new ArrayList<>();
-                                    lore.add(ColorUtil.translate("&7Cost: &65000 gold"));
-                                    meta.setLore(lore);
-                                    stack.setItemMeta(meta);
-                                    e.getInventory().setItem(16, stack);
-                                }
-                                case BOW -> {
-
-                                }
-                            }
-                        } else if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Discover Item")) {
-                            if (data.getGold() >= 5000) {
-                                data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(5000)).doubleValue());
-                                Class<?> mysticClass = MysticLoader.INSTANCE.MYSTICS[randomInt(0, (MysticLoader.INSTANCE.MYSTICS.length - 1))];
-                                try {
-
-
-                                    MysticItem item = (MysticItem) mysticClass
-                                            .getConstructor(int.class, int.class)
-                                            .newInstance(randomInt(4, 0), randomInt(20, 4));
-                                    data.getMysticItems().add(item);
-                                    data.addMystic(item);
-                                    if(e.getInventory().getContents()[10] != null) {
-                                        player.getInventory().remove(e.getInventory().getContents()[10]);
-                                    }
-                                    player.closeInventory();
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    player.sendMessage(ChatColor.RED + "Something went wrong!");
-                                    player.closeInventory();
-                                }
-                            } else {
-                                player.sendMessage(ChatColor.RED + "Not enough gold!");
-                            }
-                        }
-                    }
-                    case "perks 3", "perks 2", "perks 1" -> {
+                    case "perks 3", "perks 2", "perks 1", "perks 4", "perks 5" -> {
                         e.setCancelled(true);
                         if (e.getCurrentItem() == null) return;
                         if (e.getCurrentItem().getItemMeta() == null) return;
@@ -492,7 +417,7 @@ public class PlayerListener implements Listener {
                         if (e.getCurrentItem().getItemMeta() == null) return;
                         if (e.getCurrentItem().getItemMeta().getDisplayName() == null) return;
                         int slot = Integer.parseInt(e.getCurrentItem().getItemMeta().getDisplayName().split("#")[1]) - 1;
-                        if ((slot == 1 && data.getLevel() >= 35) || (slot == 2 && data.getLevel() >= 75) || slot == 0) {
+                        if ((slot == 1 && data.getLevel() >= 35) || (slot == 2 && data.getLevel() >= 75) || slot == 0 || (slot == 3 && data.getPrestige() > 0) || (slot == 4 && data.getPrestige() > 1)) {
                             new SelectGui(data, slot + 1).openGui();
                         } else {
                             player.sendMessage(ChatColor.RED + "You do not have the required level!");
