@@ -124,7 +124,7 @@ public class HulkEvent extends Event {
         hulk.getPlayer().getInventory().addItem(ItemUtils.createItem(Material.DIAMOND_SWORD));
 
         PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 19999980, 0);
-        PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 19999980, 0);
+        PotionEffect speed = new PotionEffect(PotionEffectType.SLOW, 19999980, 0);
         PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 1, 255);
         PotionEffect absorption = new PotionEffect(PotionEffectType.ABSORPTION, 19999980, 5);
 

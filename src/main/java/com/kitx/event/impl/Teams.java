@@ -77,15 +77,15 @@ public class Teams extends Event {
             data.setPrefix(blueTeam.contains(data) ? "\247b" : "\247c");
         }
 
-        if(Math.abs(blueTeamKills - redTeamKills) > 30) {
+        if(Math.abs(blueTeamKills - redTeamKills) > 10) {
             final boolean team = blueTeamKills > redTeamKills;
             if(team) {
                 for(PlayerData data : redTeam) {
-                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(60, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(60, 0)));
+                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(5, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(5, 0)));
                 }
             } else {
                 for(PlayerData data : blueTeam) {
-                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(60, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(60, 0)));
+                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(5, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(5, 0)));
                 }
             }
         }
