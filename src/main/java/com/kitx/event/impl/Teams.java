@@ -128,6 +128,7 @@ public class Teams extends Event {
             } else {
                 redTeam.add(data);
             }
+            data.getPlayer().sendMessage(ColorUtil.translate("&e&lKitX TEAM EVENT:"));
             data.getPlayer().sendMessage(ColorUtil.translate(blueTeam.contains(data) ? "&b&lYou are on the blue team!" : "&c&lYou are on the red team!"));
         }
 

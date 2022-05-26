@@ -6,7 +6,7 @@ import com.kitx.perks.PerkInfo;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-@PerkInfo(name = "&6Lava Perk", desc = "&aReceive a lava bucket", cost = 450, icon = Material.LAVA_BUCKET)
+@PerkInfo(name = "&6Lava Perk", desc = "&aReceive a lava bucket", cost = 350, icon = Material.LAVA_BUCKET)
 public class LavaPerk extends Perk {
 
     @Override

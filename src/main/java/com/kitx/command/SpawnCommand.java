@@ -16,7 +16,7 @@ public class SpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             Location location = Config.getLocation();
             if(location == null) {
-                player.sendMessage(ChatColor.RED + "No spawn defined.");
+                player.sendMessage(ChatColor.RED + "Spawn is currently not set. Please notify a Admin.");
             } else {
                 player.teleport(location);
             }

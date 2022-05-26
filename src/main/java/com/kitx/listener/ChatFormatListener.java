@@ -29,7 +29,7 @@ public class ChatFormatListener implements Listener {
         if (suffix == null) suffix = "";
         if (!event.getPlayer().hasPermission("core.vip")) {
             if (!data.getChatCD().hasCooldown(2)) {
-                p.sendMessage(ColorUtil.translate(String.format("&cThere is a &4%s &csecond chat delay!", data.getChatCD().getSeconds())));
+                p.sendMessage(ColorUtil.translate(String.format("&cThere is a &4%s &csecond chat cooldown!", data.getChatCD().getSeconds())));
                 event.setCancelled(true);
             }
         }

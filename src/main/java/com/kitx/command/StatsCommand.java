@@ -2,6 +2,7 @@ package com.kitx.command;
 
 import com.kitx.data.DataManager;
 import com.kitx.data.PlayerData;
+import com.kitx.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,14 +20,14 @@ public class StatsCommand implements CommandExecutor {
 
                 player.sendMessage(ChatColor.RED + "Stats of " + data.getPlayer().getName());
                 player.sendMessage("");
-                player.sendMessage(ChatColor.RED + "level: " + data.getLevel());
-                player.sendMessage(ChatColor.RED + "gold " + data.getGold());
-                player.sendMessage(ChatColor.RED + "kills: " + data.getKills());
-                player.sendMessage(ChatColor.RED + "kill streak: " + data.getKillStreak());
-                player.sendMessage(ChatColor.RED + "deaths: " + data.getDeaths());
+                player.sendMessage(ColorUtil.translate("&7Level: &f" + data.getLevel()));
+                player.sendMessage(ColorUtil.translate("&7Gold &f" + data.getGold()));
+                player.sendMessage(ColorUtil.translate("&7Kills: &f" + data.getKills()));
+                player.sendMessage(ColorUtil.translate("&7Kill Streak: &f" + data.getKillStreak()));
+                player.sendMessage(ColorUtil.translate("&7Deaths: &f" + data.getDeaths()));
 
             } catch (Exception e) {
-                player.sendMessage(ChatColor.RED + "Invalid player!");
+                player.sendMessage(ChatColor.RED + "Player seems to be not online!");
             }
         }
         return false;

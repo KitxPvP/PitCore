@@ -12,6 +12,6 @@ public class PrestigeGui extends Menu {
 
     @Override
     public void loadMenu() {
-        inventory.setItem(13, createGuiItem(Material.DIAMOND, "&bPrestige", "&7Current: " + data.getPrestige(), "&7Required Level: 120", "&7Costs:", "&cResets &blevel to 1", "&cResets &6gold to 0", "&cResets &aALL perks and upgrades", "", "&eClick to purchase!"));
+        inventory.setItem(13, createGuiItem(Material.DIAMOND, "&bPrestige", "&7Current: " + data.getPrestige(), "&7Required Level: 120", "&7Costs:", "&cResets &blevel to 1", "&cResets &6gold to 0", "&cResets &aALL perks and upgrades", "", "&eClick to Prestige!"));
     }
 }

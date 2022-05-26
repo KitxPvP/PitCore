@@ -293,7 +293,7 @@ public class PlayerListener implements Listener {
                                 }
                             }
                             case "diamond chestplate" -> {
-                                if (data.getGold() > 500) {
+                                if (data.getGold() > 300) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(500)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
                                     ItemMeta itemMeta = itemStack.getItemMeta();
@@ -314,7 +314,7 @@ public class PlayerListener implements Listener {
                                 }
                             }
                             case "diamond boots" -> {
-                                if (data.getGold() > 300) {
+                                if (data.getGold() > 150) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(300)).doubleValue());
                                     ItemStack itemStack = new ItemStack(Material.DIAMOND_BOOTS);
                                     ItemMeta itemMeta = itemStack.getItemMeta();

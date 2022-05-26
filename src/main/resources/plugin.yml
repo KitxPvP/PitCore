@@ -26,3 +26,5 @@ commands:
     description: Used for events!
   bounty:
     description: Adds bounty
+  ping:
+    description: See a ping of a player.
