@@ -213,7 +213,7 @@ public class PlayerListener implements Listener {
         Player p = event.getPlayer();
         PlayerData data = DataManager.INSTANCE.get(p);
         Location l = p.getLocation();
-        Vector vector = p.getEyeLocation().getDirection().multiply(3);
+        Vector vector = p.getEyeLocation().getDirection().multiply(3.4);
         vector.setY(0.7);
         Location d = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
         if (d.getBlock().getType() == Material.SLIME_BLOCK && System.currentTimeMillis() - data.getLastJumpPad() > 1000) {
@@ -313,10 +313,10 @@ public class PlayerListener implements Listener {
                                     player.sendMessage(ChatColor.RED + "Not enough gold");
                                 }
                             }
-                            case "diamond boots" -> {
-                                if (data.getGold() > 150) {
+                            case "iron boots" -> {
+                                if (data.getGold() > 100) {
                                     data.setGold(BigDecimal.valueOf(data.getGold()).subtract(BigDecimal.valueOf(300)).doubleValue());
-                                    ItemStack itemStack = new ItemStack(Material.DIAMOND_BOOTS);
+                                    ItemStack itemStack = new ItemStack(Material.IRON_BOOTS);
                                     ItemMeta itemMeta = itemStack.getItemMeta();
                                     itemMeta.spigot().setUnbreakable(true);
                                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

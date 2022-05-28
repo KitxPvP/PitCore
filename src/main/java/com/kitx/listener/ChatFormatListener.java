@@ -27,6 +27,11 @@ public class ChatFormatListener implements Listener {
         String header = data.getHeader();
         if (prefix == null) prefix = "";
         if (suffix == null) suffix = "";
+
+        if (event.getMessage().contains("hack") || event.getMessage().contains("cheating")) {
+            p.sendMessage(ColorUtil.translate("&cPlease use &f/report &cto report cheaters or rule breakers."));
+        }
+
         if (!event.getPlayer().hasPermission("core.vip")) {
             if (!data.getChatCD().hasCooldown(2)) {
                 p.sendMessage(ColorUtil.translate(String.format("&cThere is a &4%s &csecond chat cooldown!", data.getChatCD().getSeconds())));

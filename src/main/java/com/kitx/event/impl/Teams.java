@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
@@ -34,10 +35,10 @@ public class Teams extends Event {
     public void onStop() {
         if (blueTeamKills > redTeamKills) {
             Bukkit.broadcastMessage(ColorUtil.translate("&7[&eEvent&7] &bBlue &7team wins!"));
-            blueTeam.forEach(data -> data.addGold(1000));
+            blueTeam.forEach(data -> data.addGold(500));
         } else {
             Bukkit.broadcastMessage(ColorUtil.translate("&7[&eEvent&7] &cRed &7team wins!"));
-            redTeam.forEach(data -> data.addGold(1000));
+            redTeam.forEach(data -> data.addGold(500));
         }
         blueTeam.clear();
         redTeam.clear();
@@ -76,16 +77,20 @@ public class Teams extends Event {
         for(PlayerData data : DataManager.INSTANCE.getPlayerDataMap().values()) {
             data.setPrefix(blueTeam.contains(data) ? "\247b" : "\247c");
         }
+        PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 25, 0);
+        PotionEffect strength = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 15, 0);
 
-        if(Math.abs(blueTeamKills - redTeamKills) > 10) {
+        if(Math.abs(blueTeamKills - redTeamKills) > 5) {
             final boolean team = blueTeamKills > redTeamKills;
             if(team) {
                 for(PlayerData data : redTeam) {
-                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(5, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(5, 0)));
+                    data.getPlayer().addPotionEffect(speed, true);
+                    data.getPlayer().addPotionEffect(strength, true);
                 }
             } else {
                 for(PlayerData data : blueTeam) {
-                    data.getPlayer().addPotionEffects(Arrays.asList(PotionEffectType.SPEED.createEffect(5, 0), PotionEffectType.INCREASE_DAMAGE.createEffect(5, 0)));
+                    data.getPlayer().addPotionEffect(speed, true);
+                    data.getPlayer().addPotionEffect(strength, true);
                 }
             }
         }

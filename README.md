@@ -11,3 +11,7 @@ This PitPvP Core has many features similar to the Hypixel game mode called "PitP
 - Event System
 
 There are many more things to come to 
+
+
+# Current things that need to be Fixed.
+

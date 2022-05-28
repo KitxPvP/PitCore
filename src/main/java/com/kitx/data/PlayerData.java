@@ -279,7 +279,11 @@ public class PlayerData {
     // https://www.spigotmc.org/threads/change-name-above-head-spigot-1-8.66314/
     public void updateNameTag() {
         Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
-        sb.getTeam(player.getName()).setPrefix(getHeader() + " ");
+        if (hulk) {
+            sb.getTeam(player.getName()).setPrefix(ColorUtil.translate("&2&lHULK "));
+        } else {
+            sb.getTeam(player.getName()).setPrefix(getHeader() + " ");
+        }
     }
 
     public void setPrefix(String prefix) {

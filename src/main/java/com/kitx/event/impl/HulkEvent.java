@@ -35,9 +35,10 @@ public class HulkEvent extends Event {
         if(hulk != null) {
             Bukkit.broadcastMessage(ColorUtil.translate("&e&lEvent hulk has stopped! Player " + hulk.getPlayer().getName() + " has won the event!"));
             hulk.getPlayer().sendTitle(ColorUtil.translate("&a&lYou have won the event!"), "");
-            hulk.addGold(5000);
+            hulk.addGold(2800);
             hulk.loadLayout();
             hulk.setHulk(false);
+            hulk.updateNameTag();
             hulk = null;
         }
         super.onStop();
@@ -50,6 +51,7 @@ public class HulkEvent extends Event {
             event.setGold(event.getGold() * 4);
             event.setXp(event.getXp() * 4);
             event.getPlayer().setHulk(false);
+            event.getPlayer().updateNameTag();
         }
     }
 
@@ -124,12 +126,12 @@ public class HulkEvent extends Event {
         hulk.getPlayer().getInventory().addItem(ItemUtils.createItem(Material.DIAMOND_SWORD));
 
         PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 19999980, 0);
-        PotionEffect speed = new PotionEffect(PotionEffectType.SLOW, 19999980, 0);
+        PotionEffect slow = new PotionEffect(PotionEffectType.SLOW, 19999980, 0);
         PotionEffect heal = new PotionEffect(PotionEffectType.HEAL, 1, 255);
         PotionEffect absorption = new PotionEffect(PotionEffectType.ABSORPTION, 19999980, 5);
 
         hulk.getPlayer().addPotionEffect(regen, true);
-        hulk.getPlayer().addPotionEffect(speed, true);
+        hulk.getPlayer().addPotionEffect(slow, true);
         hulk.getPlayer().addPotionEffect(heal, true);
         hulk.getPlayer().addPotionEffect(absorption, true);
         hulk.getPlayer().updateInventory();
@@ -138,5 +140,7 @@ public class HulkEvent extends Event {
         Bukkit.broadcastMessage(ColorUtil.translate("&7[&eHulk Event&7] &4" + hulk.getPlayer().getName() + " is now the hulk!"));
         hulk.getPlayer().getWorld().playSound(hulk.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
         hulk.setHulk(true);
+        hulk.updateNameTag();
+
     }
 }

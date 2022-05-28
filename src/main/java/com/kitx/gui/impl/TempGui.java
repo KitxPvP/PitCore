@@ -20,6 +20,6 @@ public class TempGui extends Menu {
         inventory.setItem(12, itemStack);
 
         inventory.setItem(14, createGuiItem(Material.DIAMOND_CHESTPLATE, "&eDiamond Chestplate",  "&7Auto-equips on buy!", "", "&7&oLost on death.", "&7Cost&f: &6300g", "&eClick to purchase!"));
-        inventory.setItem(15, createGuiItem(Material.DIAMOND_BOOTS, "&bDiamond Boots", "&7Auto-equips on buy!", "", "&7&oLost on death.", "&7Cost&f: &6150g", "&eClick to purchase!"));
+        inventory.setItem(15, createGuiItem(Material.IRON_BOOTS, "&bIron Boots", "&7Auto-equips on buy!", "", "&7&oLost on death.", "&7Cost&f: &6100g", "&eClick to purchase!"));
     }
 }
