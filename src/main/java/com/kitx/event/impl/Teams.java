@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -59,7 +60,7 @@ public class Teams extends Event {
                     damager.sendMessage(ChatColor.RED + "You cannot attack your own teammate!");
                 }
             }
-        } else if(event.getDamager() instanceof Arrow arrow && event.getEntity() != null) {
+        } else if(event.getDamager() instanceof Projectile arrow && event.getEntity() != null) {
             if(event.getEntity() instanceof Player victim && arrow.getShooter() instanceof Player damager) {
                 PlayerData attacker = DataManager.INSTANCE.get(damager);
                 PlayerData victimUser = DataManager.INSTANCE.get(victim);

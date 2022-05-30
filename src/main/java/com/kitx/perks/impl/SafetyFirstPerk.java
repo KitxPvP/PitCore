@@ -13,4 +13,10 @@ public class SafetyFirstPerk extends Perk {
         player.getPlayer().getInventory().setHelmet(ItemUtils.createItem(Material.CHAINMAIL_HELMET));
         super.onLayout(player);
     }
+
+    @Override
+    public void onClick(PlayerData player) {
+        player.getPlayer().getInventory().setHelmet(ItemUtils.createItem(Material.CHAINMAIL_HELMET));
+        super.onClick(player);
+    }
 }

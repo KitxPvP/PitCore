@@ -6,6 +6,7 @@ import com.kitx.perks.Perk;
 import com.kitx.perks.PerkLoader;
 import com.kitx.scoreboard.FastBoard;
 import com.kitx.utils.*;
+import com.lielamar.lielsutils.groups.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import net.luckperms.api.LuckPerms;
@@ -26,9 +27,8 @@ import org.bukkit.scoreboard.Team;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
@@ -41,10 +41,9 @@ public class PlayerData {
 
     private int level, kills, deaths, xp, neededXp, killStreak, prestige, scoreboard;
     private double gold, bounty;
-
+    private final Map<Player, Long> assists = new ConcurrentHashMap<>();
     private final CountDown countDown = new CountDown(10);
-    private final Cooldown chatCD = new Cooldown();
-    private final Cooldown gapCD = new Cooldown();
+    private final Cooldown gapCD = new Cooldown(), chatCD = new Cooldown(), bomberCD = new Cooldown();
     private boolean hulk;
 
     private final List<Location> pendingBlocks = new ArrayList<>();
